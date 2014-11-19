@@ -33,13 +33,13 @@ function loadClient() {
     var urlLocation = '1wrTuRSXhuzu50ozWG5RcTeolnGe3GCnCCYtvpLoTGP0'; //Get this from the URL of your Spreadsheet in the normal interface for Google Drive.
 
     //This gives a spitout of ALL spreadsheets that the user has access to.
-    var url = 'https://spreadsheets.google.com/feeds/spreadsheets/private/full?access_token=' + token;
+    var url = 'http://spreadsheets.google.com/feeds/spreadsheets/private/full?access_token=' + token;
 console.log(url);
     //This gives a list of all worksheets inside the Spreadsheet, does not give actual data
-    var url = 'https://spreadsheets.google.com/feeds/worksheets/' + urlLocation + '/private/full?access_token=' + token;
+    var url = 'http://spreadsheets.google.com/feeds/worksheets/' + urlLocation + '/private/full?access_token=' + token;
 console.log(url);
     //This gives the data in a list view - change the word list to cells to work from a cell view and see https://developers.google.com/google-apps/spreadsheets/#working_with_cell-based_feeds for details
-    var url = 'https://spreadsheets.google.com/feeds/cells/' + urlLocation + '/1/private/full?access_token=' + token;
+    var url = 'http://spreadsheets.google.com/feeds/cells/' + urlLocation + '/1/private/full?access_token=' + token;
 console.log(url);
     $.get(url, function(data) {	
 		console.log(data);
