@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
+ <meta name="mobile-web-app-capable" content="yes">
+ <title>Manure App</title>
+ <link rel="stylesheet" type="text/css" href="ma-style.css" />
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
+<link rel="stylesheet" href="http://demos.jquerymobile.com/1.4.0/theme-classic/theme-classic.css" />
+<link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="drive.js"></script>
+<script>
+$(document).bind('mobileinit',function(){
+		$.mobile.selectmenu.prototype.options.nativeMenu = false;
+	});
+	</script>
+</head>
+	
+<body>
+	
+	<!-- Home Page
+=======================================================================-->
+	<div data-role="page" id="home" data-theme="d" >
+		<div data-role="header" class="ui-header">
+			<h1>Manure App</h1>
+			<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+		</div>
+		<div data-role="content" id="navigation">
+			<div id="mainLeft">
+				<a href="#spreader-list" id="spreaderBtn" data-role="button" data-transition="slide" class="custom-btn">Manure Spreaders</a>
+				<a href="#field-list" id="fieldBtn" data-role="button" data-transition="slide" class="custom-btn" >Field Lists </a>
+				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn">Source</a>
+				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operater List</a>
+			</div>
+			<div id="mainRight">
+				<select  id="spFill">
+					<option value="">Fill Level</option>
+					<option value="full">Full</option>
+					<option value="threeFourths">3/4</option>
+					<option value="oneHalf">1/2</option>
+					<option value="onequarter">1/4</option>
+				</select>
+			<div id="loadsOnField" style="text-align: center;" class="infoReturn">Loads on field</div>
+			<div id="loadsRemoved" style="text-align: center;" class="infoReturn">Loads removed</div>
+			</div>
+		</div>
+		<div id="targetRate" style="text-align: center;">
+		<div data-role="header">
+			<h4>Target Rate</h4>
+			</div>
+			<div id="operator" style="float: left;" >
+				<h4>Current Speed</h4>
+				<label id="cur_speed"></label>
+			</div>
+			<div id="rightRate"style="float: right;" >
+				<h4>Target Speed</h4>
+				<label id="speedReturn"># (MPH)</label>
+			</div>
+		</div>
+		<div id="hideUnload">
+		<div data-role="content" id="notUnloading">
+			<input type="button" id="startBtn" onclick="startUnload()" value="Start Unloading"/>
+		</div>
+		<div data-role="content" data-position="bottom" id="unloading" class="ui-grid-a">
+			<div class="ui-block-a"><input type="button" id="startStop" value="Pause" onclick="updateStatus()"  /></div>
+			<div class="ui-block-b"><input type="button" id="done" value="Load Complete" onclick="loadComplete(); startDiv(); handleClientLoad();" data-theme="b" /></div>
+		</div>
+		</div>
+		<div data-role="footer" class="ui-footer" data-position="relative" >
+		</div>
+</div>
+	<!--Field List
+=========================================================================-->
+	<div data-role="page" id="field-list" data-theme="d">
+		<div data-role="header" data-add-back-btn="true" class="ui-header">
+			<h1>Field List</h1>
+				<div data-role="navbar" class="navbar">
+					<ul>
+						<li><a href="#home" data-role="button">Dashboard</a></li>
+						<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+						<li><a href="#recordPage" data-role="button">Records</a></li>
+						
+						<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+					</ul>
+				</div>
+		</div>
+		<div data-role="content">
+			<div id="fieldList">
+			<table id="fieldsTable"></table>
+			</div>
+			<div data-role="content" class="ui-content">
+				<a href="#add_field" data-role="button" id="addNewField" data-transition="pop"> + Add a Field </a>
+				<div data-role="content" id="fieldList" ></div>
+			</div>
+		</div>
+		<div data-role="footer" class="ui-footer" data-position="fixed">
+			<h4>Open Ag Toolkit 2014</h4>
+		</div>
+	</div>
+
+	
+	<!--Add Field page
+	====================================================================-->
+	<div data-role="page" id="add_field" data-theme="d">
+		<div data-role="header" data-add-back-btn="true" class="ui-header">
+			<h1>Add a field</h1>
+			<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+		</div>
+		<div data-role="content" id="fieldContainer" data-role="ui-content">
+			<div id="addFieldName">
+					<input type="text" id="fieldName" value="" placeholder="Field Name"/>
+			</div>		
+			<div id= "fieldInputDiv">
+				<div id="rateLeft">
+					<select id="rateUnit">
+						<option value="">Select Unit</option>
+						<option value="gal/ac">Gallons/Acre</option>
+						<option value="1000gal/ac"> 1000 Gallons/Acre</option>
+						<option value="tons/ac">Tons/Acre</option>
+					</select>
+				</div>
+				<div id="rateRight">
+					<div style="text-align:center;"><label for="rateValue" id="rateLabel">Desired Rate:</label></div>
+					<input type="number" id="rateValue" value="" min="0.1" max="10000" step="0.1" />
+				</div>
+			</div>
+		</div>		
+		<div id="addFieldMap">
+		</div>
+
+		<div data-role="footer" class="ui-footer" data-position="fixed" data-tap-toggle="false">
+			<div data-role="navbar">
+				<ul>
+					<li><input type="submit" class="flButton" id="cancelField" value="Cancel" /></li>
+					<li><input type="submit" class="flButton" id="deleteField" value="Delete" /></li>
+					<li><input type="submit" class="flButton" id="saveField" value="Save" /></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<!-- Spreader Page
+====================================================================-->
+	<div data-role="page" id="spreader-list" data-theme="d">
+		<div data-role="header"data-add-back-btn="true">
+		<h1>Spreader List</h1>
+		<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+		</div>
+		<div data-role="content">
+		<div id="spreaders" data-scroll="true">
+		<table id="spTable"></table>
+		</div>
+		<div data-role="collapsible" id="add-spreader">
+			<h3>Add Spreader</h3>
+		<div data-role="fieldcontain" id="colSpreader">
+				<div><label for="spName">Name:</label><input type="text" id="spName" value="" /></div>
+				<div><label for="spCapacity">Capacity:</label><input type="text" id="spCapacity" value="" /></div>
+				<div><label for="spUnit" class="select">Unit:</label><select unit="select-unit" id="spUnit">
+				<option value="">Select Unit</option>
+				<option value="Tons">Tons</option>
+				<option value="Gallons">Gallons</option>
+				</select>
+			</div>
+			<div><label for="spWidth">Spread Width (ft):</label><input type="text" id="spWidth" value="" /></div>
+			<div>
+				<label for="spType">Spreader Type:</label><select id="spType">
+				<option value="">Select Spreader Type</option>
+				<option value="Right Side Discharge">Right Side Discharge</option>
+				<option value="Left Side Discharge">Left Side Discharge</option>
+				<option value="Rear Discharge">Rear Discharge</option>
+				<option value="Injection">Injection</option>
+				</select>
+				<div>
+				<label for="unloadTime">Unload Time (minutes)<input id="unloadTime" type="number" min="0" max="10" step="0.1" value="7.5"/>
+			</div>
+		</div>
+			<div align="center" class="ui-grid-a">
+				<div class= "ui-block-a" ><button type="submit" id="slCancel">Cancel</button></div>
+				<div class= "ui-block-b"><button type="submit" id="slSave" onclick="saveSpreader()" data-theme="b">Save</button></div>
+			</div>
+		</div>
+		</div>
+	</div>
+	</div>
+	<!-- Source Page
+	========================================================-->
+	<div data-role="page" id="sourceList" data-theme="d">
+		<div data-role="header"data-add-back-btn="true">
+		<h1>Source List</h1>
+		<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide"onclick="return createMap();">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+		</div>
+		<div id="sourcelist">
+			<table id="sourceTable"></table>
+				
+		</div>
+		<div data-role="collapsible" id="add_source">
+			<h3>Add Source</h3>
+		<div data-role="fieldcontain" id="colSource">
+				<label for="sourceName">Source Name:</label><input type="text" id="sourceName" value="" />
+					<h4 Style="text-align: center">Nutrient Content</h4>
+				<div style="text-align: center;">
+				<select id="sourceUnit" style="text-align: center;">
+				<option value="">Select Unit Measure of Nutrient</option>
+				<option value="Lbs/Ton">Lbs/Ton</option>
+				<option value="Lbs/Gallon">Lbs/Gallon</option>
+				<option value="Lbs/1000Gallon">Lbs/1000 Gallons</option>
+				<option value="percent">Percent</option>
+				</select>
+				</div>
+				<div>
+				<label for="nUnits">Units of Nitrogen:</label><input type="number" id="nUnits" value=""/>
+				<label for="kUnits">Units of Potassium:</label><input type="number" id="kUnits" value=""/>
+				<label for="pUnits">Units of Phosphorus:</label><input type="number" id="pUnits" value=""/>
+				</div>
+		</div>
+			<div align="center" class="ui-grid-a">
+				<div class="ui-block-a"><button type="submit" id="sourceCancel">Cancel</button></div>
+				<div  class="ui-block-b"><button type="submit" id="sourceSave" onclick="saveSource()">Save</button></div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Map Page
+	=========================================================-->
+	<div data-role="page" id="map-page" data-theme="d">
+		<div data-role="header" class="ui-header" data-add-back-btn="true">
+			<h1>Maps</h1>
+			<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+		</div>
+		<div data-role="content" id="map-canvas" class="content"></div>
+		<div data-role="footer" class="ui-footer" data-position="relative">
+		<h4>OpenATK Manure App</h4>
+		</div>
+	</div>
+	
+	
+	<!-- Plan Page
+	========================================================-->
+	<!-- <div data-role="page" id="plan_page" data-theme="d">
+		<div data-role="header">
+			<h3>Plan Operation</h3>
+			<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+				 	<li><a href="#plan_page" data-role="button">Plan</a></li>
+				</ul>
+			</div>
+		</div>
+		<div data-role="content">
+			<div id="planList" data-role="collapsible-set" data-mini="true" data-theme="b">
+				<h3>Plan List</h3>
+				<div data-role="fieldcontain"id="plList">
+					
+				</div>
+
+			</div>
+			<select id="fieldPlan">
+				<option value="">Select Field</option>
+				<option value="Field 1">Field 1</option>
+				<option value="Field 2">Field 2</option>
+			</select>
+			<select id="sourcePlan">
+				<option value="">Select Source</option>
+				<option value="Source 1">Source 1</option>
+				<option value="Source 2">Source 2</option>
+			</select>
+			<div >
+			<label for="date">Date Input :</label><input type="date" name="date" id="date" value="" />
+			</div>
+			<div id="planAction"class="ui-grid-a">
+			<div class="ui-block-a"><input type="button" id="cancelPlan" value="Cancel" /></div>
+			<div class="ui-block-b"><input type="button" id="savePlan" value="Save" onclick="addPlanDiv()" /></div>
+			
+			</div>
+		</div>
+	</div> --> 
+	
+
+		<!-- Operator list page
+	====================================================================-->
+<div data-role="page" id="operator_page" data-theme="d">
+	<div data-role="header" data-add-back-btn="true" class="ui-header">
+		<h1>Operator List</h1>
+		<div data-role="navbar" class="navbar">
+			<ul>
+				<li><a href="#home" data-role="button">Dashboard</a></li>
+				<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
+				<li><a href="#recordPage" data-role="button">Records</a></li>
+				<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+			</ul>
+		</div>
+	</div>
+	<div data-role="content">
+		<div id="operatorList">
+			<table id="operator_table"></table>
+		</div>
+		<div data-role="collapsible" id="add_operator">
+			<h3>Add Operator</h3>
+			<div data-role="fieldcontain" id="">
+				<input type="text" id="opName" value="" placeholder="Operator's Name" />
+			</div>
+			<div class="ui-grid-a">
+				<div class="ui-block-a"><button id="cancelOp" type="submit">Cancel</button></div>
+				<div class="ui-block-b"><button id="saveOp" type="submit" onclick="saveOperator()">Save</button></div>
+			</div>
+		</div>
+		<div data-role="footer" class="ui-footer" data-position="fixed">
+			<h4>Open Ag Toolkit 2014</h4>
+		</div>
+	</div>
+</div>
+
+<!-- Records Page	
+========================================================-->
+<div data-role="page" id="recordPage" data-theme="d">
+	<div data-role="header">
+		<h3>Manure Records</h3>
+		<div data-role="navbar" class="navbar">
+				<ul>
+					<li><a href="#home" data-role="button">Dashboard</a></li>
+					<li><a href="#map-page" data-role="button" data-transition="slide">Map</a></li>
+					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+				</ul>
+			</div>
+	</div>
+	<div data-role="content" id="recordDiv">
+		<table id="recordTable"></table>
+	</div>
+
+</div>
+</body>
+<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+<script src="https://apis.google.com/js/client.js?onload=onApiLoad"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=drawing"></script>
+<script src="ma-script.js"></script>
+<script src="data_store.js"></script>
+<!--<script src="local_store.js"></script>-->
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
+ 
+</html>
+
+
+<!--					<h3>Date</h3>
+				<div data-role="fieldcontain">
+					<div>
+					<label for="fieldName">Field:</label><input type="text" id="fieldName" value="'+field+'" />
+					</div>
+					<div>
+					<label for="sourceName">Source:</label><input type="text" id="sourceName" value="'+source+'" />
+					</div>
+					<div>
+					<label for="planDate" class="select">Date:</label><input type="text" id="planDate" value="'+date+'">
+					</div>
+					</div>
+				</div>-->
