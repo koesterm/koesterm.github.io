@@ -89,10 +89,10 @@ console.log(answer);
 }
 
 function appendSpreadsheet(){
-function constructAtomXML(foo){
+function constructAtomXML(data){
   var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
           '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">',//'--END_OF_PART\r\n',
-          '<gsx:columnTitle>',foo,'</gsx:columnTitle>',//'--END_OF_PART\r\n',
+          '<gsx:columnTitle>',data,'</gsx:columnTitle>',//'--END_OF_PART\r\n',
           '</entry>'].join('');
   return atom;
  };
@@ -103,7 +103,7 @@ function constructAtomXML(foo){
    'GData-Version': '3.0',
    'Content-Type': 'application/atom+xml'
  },
- 'body': constructAtomXML(foo)
+ 'body': constructAtomXML(data)
  };
 
  var docId //Get this from the spreadsheet URL or from the Google Drive API.
