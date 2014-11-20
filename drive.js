@@ -109,7 +109,7 @@ function constructAtomXML(foo){
  var docId //Get this from the spreadsheet URL or from the Google Drive API.
  var worksheetId = '0'; //The worksheet Id for the first sheet is 'od6' by default.
 
- url = "https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full"';
+ url = "https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full";
 
  sendSignedRequest(url, handleSuccess, params); //Use your OAuth2 lib
 }
