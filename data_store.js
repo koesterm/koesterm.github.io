@@ -425,8 +425,9 @@ function recordTableFunc() {
 
 function loadComplete(){
 	postPath();
-	records.push(cur_record);
-    recordTableFunc();
+   	records.push(cur_record);
+    	recordTableFunc();
+    	cur_record={};
     //appendSpreadsheet();
 	// jsonData = JSON.stringify(records);
 	// console.log(jsonData);
