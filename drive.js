@@ -88,98 +88,24 @@ console.log(answer);
 		});	
 }
 
-/*function appendSpreadsheet(){
-function constructAtomXML(data){
-  var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
+function appendSpreadsheet(){
+var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
           '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">',//'--END_OF_PART\r\n',
-          '<gsx:columnTitle>',data,'</gsx:columnTitle>',//'--END_OF_PART\r\n',
+          '<gsx:columnTitle>',records,'</gsx:columnTitle>',//'--END_OF_PART\r\n',
           '</entry>'].join('');
-  return atom;
- };
-
- var params = {
- 'method': 'POST',
- 'headers': {
-   'GData-Version': '3.0',
-   'Content-Type': 'application/atom+xml'
- },
- 'body': constructAtomXML(data)
- };
-
- var docId //Get this from the spreadsheet URL or from the Google Drive API.
- var worksheetId = '0'; //The worksheet Id for the first sheet is 'od6' by default.
-
- url = "https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full";
-
- sendSignedRequest(url, handleSuccess, params); //Use your OAuth2 lib
+  
+  $.ajax({
+		type:"POST",
+		url: 'https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full',
+		crossDomain: true,
+		data: atom,
+		dataType: 'xml',
+		success: function(data){
+			alert("row added")
+		},
+		error: function(){
+			alert("error");
+		}
+	});			
 }
 
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// }
- // $.get(url, function(data) {
-
-      
- //    console.log(data);
-    
- //    });
-
-
-
-  // var clientId = '709292561497-l889002bdhb28rsbu1gi4j99r1rvhaa0.apps.googleusercontent.com';
-  // var developerKey = 'AIzaSyDix-PcT_EUN-kVGfLctLzRKtHITqSmvZg';
-  // var accessToken;
-  // function onApiLoad() {
-  //   gapi.load('auth', authenticateWithGoogle);
-  //   gapi.load('picker');
-  // }
-  // function authenticateWithGoogle() {
-  //   window.gapi.auth.authorize({
-  //     'client_id': clientId,
-  //     'scope': ['https://www.googleapis.com/auth/drive']
-  //   }, handleAuthentication);
-  // }
-  // function handleAuthentication(result) {
-  //   if(result && !result.error) {
-  //     accessToken = result.access_token;
-  //     setupPicker();
-  //   }
-  // }
-  // function setupPicker() {
-  //   var picker = new google.picker.PickerBuilder()
-  //     .setOAuthToken(accessToken)
-  //     .setDeveloperKey(developerKey)
-  //     .setOrigin(window.location.protocol + '//' + window.location.host)
-  //     .addView(new google.picker.DocsUploadView())
-  //     .addView(new google.picker.DocsView())
-  //     .setCallback(myCallback)
-  //     .build();
-  //   picker.setVisible(true);
-  // }
-  // function myCallback(data) {
-  //   if (data.action == google.picker.Action.PICKED) {
-  //     alert(data.docs[0].name);
-  //   }
-  // }
