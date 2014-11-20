@@ -59,7 +59,7 @@ function loadClient() {
 
 		answer="";
 			for(i=0; i< data.feed.entry.length; i++){
-				if("proposedManureAppTemp" === data.feed.entry[i].title.$t){
+				if("Manure app spreadsheet" === data.feed.entry[i].title.$t){
 				answer = data.feed.entry[i].link[0].href;
 				console.log(answer);
 				getData();
