@@ -427,7 +427,7 @@ function loadComplete(){
 	postPath();
 	records.push(cur_record);
     recordTableFunc();
-    appendSpreadsheet();
+    //appendSpreadsheet();
 	// jsonData = JSON.stringify(records);
 	// console.log(jsonData);
 }
