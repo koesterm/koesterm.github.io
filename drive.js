@@ -88,7 +88,7 @@ console.log(answer);
 		});	
 }
 
-function appendSpreadsheet(){
+/*function appendSpreadsheet(){
 function constructAtomXML(data){
   var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
           '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">',//'--END_OF_PART\r\n',
@@ -114,7 +114,7 @@ function constructAtomXML(data){
  sendSignedRequest(url, handleSuccess, params); //Use your OAuth2 lib
 }
 
-
+*/
 
 
 
