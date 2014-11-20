@@ -88,7 +88,31 @@ console.log(answer);
 		});	
 }
 
+function appendSpreadsheet(){
+function constructAtomXML(foo){
+  var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
+          '<entry xmlns="http://www.w3.org/2005/Atom" xmlns:gsx="http://schemas.google.com/spreadsheets/2006/extended">',//'--END_OF_PART\r\n',
+          '<gsx:columnTitle>',foo,'</gsx:columnTitle>',//'--END_OF_PART\r\n',
+          '</entry>'].join('');
+  return atom;
+ };
 
+ var params = {
+ 'method': 'POST',
+ 'headers': {
+   'GData-Version': '3.0',
+   'Content-Type': 'application/atom+xml'
+ },
+ 'body': constructAtomXML(foo)
+ };
+
+ var docId //Get this from the spreadsheet URL or from the Google Drive API.
+ var worksheetId = '0'; //The worksheet Id for the first sheet is 'od6' by default.
+
+ url = "https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full"';
+
+ sendSignedRequest(url, handleSuccess, params); //Use your OAuth2 lib
+}
 
 
 
