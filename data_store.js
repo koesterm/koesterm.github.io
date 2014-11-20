@@ -6,6 +6,7 @@ var cur_field;
 var cur_source;
 var cur_spreader;
 var cur_record;
+var tableRecord = [];
 var spreaders = [       
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
@@ -426,6 +427,8 @@ function loadComplete(){
 	postPath();
 	records.push(cur_record);
     recordTableFunc();
+	// jsonData = JSON.stringify(records);
+	// console.log(jsonData);
 }
 
 function appendRecordTableRows(){ 
@@ -469,10 +472,15 @@ function appendRecordTableRows(){
      */
 
      tableB.children[0].appendChild(row);
+	 
+	 
     }
+	// var tRec = {"date": records[i].date, "Time": records[i].Time,"field":  "", "operator": records[i].operator, "cSpred": records[i].cSpred.name, "cSource": records[i].cSource.name}
+	// tableRecord.push(tRec);
+	// console.log(tableRecord);
 }
 
-
+var 
 /*Creates Field Table*/
 function createFieldsTable() {
     var cols = "4";
@@ -536,7 +544,6 @@ function fieldsTableFunc() {
         appendFieldsTableRows();
     }
 }    
-
 
 function appendFieldsTableRows(){ 
     var tableB = document.getElementById('fieldsTable');

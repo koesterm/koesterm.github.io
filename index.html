@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
 
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<!--<script src="drive.js"></script>-->
+<script src="drive.js"></script>
 <script>
 $(document).bind('mobileinit',function(){
 		$.mobile.selectmenu.prototype.options.nativeMenu = false;
@@ -19,7 +19,7 @@ $(document).bind('mobileinit',function(){
 	</script>
 </head>
 	
-<body>
+<body onload="handleClientLoad()">
 	
 	<!-- Home Page
 =======================================================================-->
