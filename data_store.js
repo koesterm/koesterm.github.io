@@ -480,7 +480,6 @@ function appendRecordTableRows(){
 	// console.log(tableRecord);
 }
 
-var 
 /*Creates Field Table*/
 function createFieldsTable() {
     var cols = "4";
