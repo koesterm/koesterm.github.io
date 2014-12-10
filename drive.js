@@ -96,10 +96,10 @@ var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
   
   $.ajax({
 		type:"POST",
-		url: 'https://spreadsheets.google.com/feeds/worksheets/1qdKO02BzoR_0issplMivEOt50mmz29U0_w6GLsBYtBw/private/full',
+		url: '"https://spreadsheets.google.com/feeds/cells/1wrTuRSXhuzu50ozWG5RcTeolnGe3GCnCCYtvpLoTGP0/o3o7gnr/private/full"',
 		crossDomain: true,
 		data: atom,
-		dataType: 'jsonp',
+		dataType: 'xml',
 		success: function(data){
 			alert("row added")
 		},
