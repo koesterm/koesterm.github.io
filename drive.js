@@ -96,7 +96,7 @@ var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
   
   $.ajax({
 		type:"POST",
-		url: '"https://spreadsheets.google.com/feeds/cells/1wrTuRSXhuzu50ozWG5RcTeolnGe3GCnCCYtvpLoTGP0/o3o7gnr/private/full"',
+		url: 'https://spreadsheets.google.com/feeds/cells/1wrTuRSXhuzu50ozWG5RcTeolnGe3GCnCCYtvpLoTGP0/o3o7gnr/private/full',
 		crossDomain: true,
 		data: atom,
 		dataType: 'xml',
