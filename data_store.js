@@ -20,6 +20,24 @@ var sources = [
 
 var records = [];
 
+
+function lStorage(){
+    if(retrievedRecords = null) {
+        window.localStorage.setItem('records', JSON.stringify(records));
+        retrievedObject = window.localStorage.getItem('records');
+        retrievedRecords = JSON.parse(retrievedObject);
+        console.log(retrievedRecords);
+    }else{
+        retrievedObject = window.localStorage.getItem('retrievedRecords');
+        retrievedRecords = JSON.parse(retrievedObject);
+        console.log(retrievedRecords);
+        recordTableFunc();
+    }
+}
+lStorage();
+
+
+
 function createSpreaderTable() {
     var cols = "4";
     var spBody = document.getElementById('spTable');
@@ -154,21 +172,51 @@ $(document).ready(function(){
 
 });
 
-function spTableClickListener(){
-     $('#spTable').find('tr').click(function(){
-        $(this).siblings().removeClass("highlighted");
-        $(this).toggleClass("highlighted");
-       var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
-        for(i =0; i< spreaders.length; i++)
-            if (spreaders[i].name === cur_spreader_name){
-                cur_spreader = spreaders[i];
-                break;
-            }
-			$("#spreaderBtn").text(cur_spreader.name);
-        console.log(spreaders[i]);
+// spreader table click listener and highlights last selected spreader.
 
-    });
-}
+function spTableClickListener(){
+    if(retrievedRecords != undefined){
+        last_element = retrievedRecords[retrievedRecords.length - 1];
+        $('spTable, td').filter(function(){
+            return $(this).text() == last_element.cSpred.name;
+        }).parent('spTable, tr').toggleClass('highlighted');
+           var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
+            for(i =0; i< spreaders.length; i++)
+                if (spreaders[i].name === cur_spreader_name){
+                    cur_spreader = spreaders[i];
+                    break;
+                }
+                $("#spreaderBtn").text(cur_spreader.name);
+            console.log(cur_spreader);
+
+        $('#spTable').find('tr').click(function(){
+            $(this).siblings().removeClass("highlighted");
+            $(this).toggleClass("highlighted");
+           var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
+            for(i =0; i< spreaders.length; i++)
+                if (spreaders[i].name === cur_spreader_name){
+                    cur_spreader = spreaders[i];
+                    break;
+                }
+                $("#spreaderBtn").text(cur_spreader.name);
+            console.log(spreaders[i]);
+            });
+    }else{
+         $('#spTable').find('tr').click(function(){
+            $(this).siblings().removeClass("highlighted");
+            $(this).toggleClass("highlighted");
+           var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
+            for(i =0; i< spreaders.length; i++)
+                if (spreaders[i].name === cur_spreader_name){
+                    cur_spreader = spreaders[i];
+                    break;
+                }
+    			$("#spreaderBtn").text(cur_spreader.name);
+            console.log(spreaders[i]);
+        });
+        
+    }
+}    
 
 /*Creates Source Table*/
 function createSourceTable() {
@@ -285,6 +333,33 @@ $(document).ready(function(){
 var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}}
 
 function sourceTableClickListener(){
+
+ if(retrievedRecords != undefined){
+    last_element = retrievedRecords[retrievedRecords.length - 1];
+    $('sourceTable, td').filter(function(){
+        return $(this).text() == last_element.cSource.name;
+    }).parent('sourceTable, tr').toggleClass('highlighted');
+       var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< sources.length; i++)
+            if (sources[i].name === cur_source_name){
+                cur_source = sources[i];
+                break;
+            }
+            $("#sourceBtn").text(cur_source.name);
+        console.log(cur_source);
+
+    $('#sourceTable').find('tr').click(function(){
+        $(this).siblings().removeClass("highlighted");
+        $(this).toggleClass("highlighted");
+       var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< sources.length; i++)
+            if (sources[i].name === cur_source_name){
+                cur_source = sources[i];
+                break;
+            }
+            $("#sourceBtn").text(cur_source.name);
+        });
+    }else{
      $('#sourceTable').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
@@ -296,9 +371,8 @@ function sourceTableClickListener(){
                 break;
             }
 			$("#sourceBtn").text(cur_source.name);
-        console.log(sources[i]);
-        console.log(cur_source.name);     
     });
+    }
 }
 
 function startUnload(){
@@ -421,52 +495,85 @@ function recordTableFunc() {
         createRecordTable();
         appendRecordTableRows();
     }
+     $('#recordTable').find('tbdy').click(function(){
+            $(this).siblings().removeClass("highlighted");
+    });
+
 }   
 
 function loadComplete(){
 	postPath();
-   	records.push(cur_record);
-    	recordTableFunc();
-    	cur_record={};
-    	appendSpreadsheet();
-    //appendSpreadsheet();
-	// jsonData = JSON.stringify(records);
-	// console.log(jsonData);
+    records.push(cur_record);
+    if(retrievedRecords == null){
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
+    console.log(records);   
+    }else{  
+    retrievedRecords.push(cur_record);
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
+    console.log(retrievedRecords);
+    }
+
+
+
+
+
+
+
+     // if(records.length > 0) {
+     //        window.localStorage.setItem('records', JSON.stringify(records));
+     //    } else {
+     //        var retrievedObject = window.localStorage.getItem('records');
+     //        retrievedRecords = JSON.parse(retrievedObject);
+     //        console.log(retrievedRecords);    
+     //    }
+
+    recordTableFunc();
+	cur_record = {};
+	// appendSpreadsheet();
+	
 }
 
+
 function appendRecordTableRows(){ 
+
+    if(retrievedRecords == null){
+        var aName = records;
+    }else{
+        var aName = retrievedRecords;
+    } 
+console.log(aName);
     var tableB = document.getElementById('recordTable');
-    for (var i = 0; i < records.length; i++) {
+    for (var i = 0; i < aName.length; i++) {
      var row = tableB.insertRow(-1);
       tableB.style.textAlign = 'center';
      
      var recordDate = row.insertCell(-1);
      recordDate.textAlign = 'right';
-     recordDate.appendChild(document.createTextNode(records[i].date));
+     recordDate.appendChild(document.createTextNode(aName[i].date));
      
      var recordTime = row.insertCell(-1);
      recordTime.textAlign = 'center';
-     recordTime.appendChild(document.createTextNode(records[i].Time));
+     recordTime.appendChild(document.createTextNode(aName[i].Time));
 
     var recordOp = row.insertCell(-1);
      recordOp.textAlign = 'center';
-     recordOp.appendChild(document.createTextNode(records[i].operator));
+     recordOp.appendChild(document.createTextNode(aName[i].operator));
 
      var recordField = row.insertCell(-1);
      recordField.textAlign = 'center';
-     recordField.appendChild(document.createTextNode(records[i].field.name));
+     recordField.appendChild(document.createTextNode(aName[i].field.name));
      
      var recordSource = row.insertCell(-1);
      recordSource.textAlign = 'center';
-     recordSource.appendChild(document.createTextNode(records[i].cSource.name));
+     recordSource.appendChild(document.createTextNode(aName[i].cSource.name));
      
      var recordSpreader = row.insertCell(-1);
      recordSpreader.textAlign = 'center';
-     recordSpreader.appendChild(document.createTextNode(records[i].cSpred.name));
+     recordSpreader.appendChild(document.createTextNode(aName[i].cSpred.name));
      
      var recordAmount = row.insertCell(-1);
      recordAmount.textAlign = 'center';
-     recordAmount.appendChild(document.createTextNode(records[i].cSpred.capacity+"("+ records[i].cSpred.unit +")" ));
+     recordAmount.appendChild(document.createTextNode(aName[i].cSpred.capacity+"("+ aName[i].cSpred.unit +")" ));
      
      /*var spDel = row.insertCell(-1);
      spDel.textAlign = 'center';
@@ -478,10 +585,9 @@ function appendRecordTableRows(){
 	 
 	 
     }
-	// var tRec = {"date": records[i].date, "Time": records[i].Time,"field":  "", "operator": records[i].operator, "cSpred": records[i].cSpred.name, "cSource": records[i].cSource.name}
-	// tableRecord.push(tRec);
-	// console.log(tableRecord);
 }
+
+
 
 /*Creates Field Table*/
 function createFieldsTable() {
@@ -580,22 +686,50 @@ $(document).ready(function(){
 
 
 function fieldTableClickListener(){
-     $('#fieldsTable').find('tr').click(function(){
-        $(this).siblings().removeClass("highlighted");
-        $(this).toggleClass("highlighted");
+    if(retrievedRecords != undefined){
+         last_element = retrievedRecords[retrievedRecords.length - 1];
+            $('fieldsTable, td').filter(function(){
+            return $(this).text() == last_element.field.name;
+            }).parent('fieldsTable, tr').toggleClass('highlighted');
+            var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
+                for(i =0; i< fields.length; i++)
+                if (fields[i].name === cur_field_name){
+                    cur_field = fields[i];
+                    break;
+                }
+                $("#fieldBtn").text(cur_field.name);
 
-        cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
-        for(i =0; i< fields.length; i++)
-            if (fields[i].name === cur_field_name){
-                cur_field = fields[i];
-                break;
-            }
-			$("#fieldBtn").text(cur_field.name);
-        console.log(fields[i]);
-        console.log(cur_field);
-        console.log(records);
-        calculateSpeed();     
-    });
+            $('#fieldsTable').find('tr').click(function(){
+                $(this).siblings().removeClass("highlighted");
+                $(this).toggleClass("highlighted");
+               var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
+                for(i =0; i< fields.length; i++)
+                    if (fields[i].name === cur_field_name){
+                        cur_field = fields[i];
+                        break;
+                    }
+                    $("#fieldBtn").text(cur_field.name);
+                });
+            }else{
+
+             $('#fieldsTable').find('tr').click(function(){
+                $(this).siblings().removeClass("highlighted");
+                $(this).toggleClass("highlighted");
+
+                cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
+                
+                for(i =0; i< fields.length; i++)
+                    if (fields[i].name === cur_field_name){
+                        cur_field = fields[i];
+                        break;
+                    }
+        			$("#fieldBtn").text(cur_field.name);
+                console.log(fields[i]);
+                console.log(cur_field);
+                console.log(records);
+                calculateSpeed();     
+            });
+    }
 }
 
 function createOpTable() {
@@ -664,7 +798,39 @@ function appendOpTableRows(){
 }
 appendOpTableRows();
 
+
+$(document).ready(function(){
+   OpTableClickListener();
+});
+
+
 function OpTableClickListener(){
+    if(retrievedRecords != undefined){
+         last_element = retrievedRecords[retrievedRecords.length - 1];
+            $('operator_table, td').filter(function(){
+            return $(this).text() == last_element.operator;
+            }).parent('operator_table, tr').toggleClass('highlighted');
+            var cur_op_name = $("#operator_table tr.highlighted td")[0].innerHTML;
+                for(i =0; i< operators.length; i++)
+                if (operators[i] === cur_op_name){
+                    cur_operator = operators[i];
+                    break;
+                }
+                
+                $("#operatorBtn").text(cur_operator);
+
+        $('#operator_table').find('tr').click(function(){
+            $(this).siblings().removeClass("highlighted");
+            $(this).toggleClass("highlighted");
+           var cur_op_name = $("#operator_table tr.highlighted td")[0].innerHTML;
+            for(i =0; i< operators.length; i++)
+                if (operators[i] === cur_op_name){
+                    cur_operator = operators[i];
+                    break;
+                }
+                $("#operatorBtn").text(cur_operator);
+            });        
+    }else{      
      $('#operator_table').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
@@ -675,11 +841,11 @@ function OpTableClickListener(){
                 cur_operator = operators[i];
                 break;
             }
-            $("#operatorBtn").text(cur_operator);
-        console.log(cur_operator);     
-    });
-}
-OpTableClickListener();
+            $("#operatorBtn").text(cur_operator);  
+        });
+    }
+}    
+
 
 function operatorsTableFunc() {
     if(document.getElementById('operator_table') == null) {
@@ -691,3 +857,4 @@ function operatorsTableFunc() {
         appendOpTableRows();
     }
 }    
+
