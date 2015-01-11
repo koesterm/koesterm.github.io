@@ -1,4 +1,4 @@
-var scopes = 'https://spreadsheets.google.com/feeds';
+/*var scopes = 'https://spreadsheets.google.com/feeds';
 var clientId = '709292561497-l889002bdhb28rsbu1gi4j99r1rvhaa0.apps.googleusercontent.com';
 var apiKey = 'AIzaSyDix-PcT_EUN-kVGfLctLzRKtHITqSmvZg';
 var answer;
@@ -110,3 +110,4 @@ var atom = ["<?xml version='1.0' encoding='UTF-8'?>",
 	});			
 }
 
+*/
