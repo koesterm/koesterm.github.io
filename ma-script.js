@@ -60,6 +60,9 @@ function recordPath() {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        	travelSpeed = position.coords.speed*2.2369;
 		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed +' (MPH)</strong>';
+		console.log(travelSpeed);
+        
+        	
         },
         function () { /*error*/ }, {
             maximumAge: 250, 
@@ -73,14 +76,14 @@ function recordPath() {
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
-        3500 //stop checking after 5 seconds
+        3500 //stop checking after 3.5 seconds
     );
 };
 
 var pathTimer = window.setInterval( function () {
         recordPath();
     }, 
-    10000 //check every 15 seconds
+    10000 //check every 10 seconds
 );	
 	
 
