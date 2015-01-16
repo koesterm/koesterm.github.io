@@ -61,8 +61,6 @@ function recordPath() {
        	travelSpeed = position.coords.speed*2.2369;
 		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed +' (MPH)</strong>';
 		console.log(travelSpeed);
-        
-        	
         },
         function () { /*error*/ }, {
             maximumAge: 250, 
@@ -76,14 +74,14 @@ function recordPath() {
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
-        3500 //stop checking after 3.5 seconds
+        3500 //stop checking after 5 seconds
     );
 };
 
 var pathTimer = window.setInterval( function () {
         recordPath();
     }, 
-    10000 //check every 10 seconds
+    10000 //check every 15 seconds
 );	
 	
 
@@ -196,8 +194,8 @@ function addFieldMap(){
 			
 			var fArea = google.maps.geometry.spherical.computeArea(polygon.getPath());
 
-			areaAcres = fArea * 0.000247105;
-			areaAcres.toFixed(2)
+			areaAc = fArea * 0.000247105;
+			areaAcres = areaAc.toFixed(2)
 			$('#deleteField').on('click', function() {
 			deleteMarkers();
 			});
@@ -265,135 +263,74 @@ function addFieldRerun(){
 // Saves and pushes source information to array
 function saveSource(){
 	cur_source = { name: $("#sourceName").val(), nutrientUnit: $("#sourceUnit").val(), N:$("#nUnits").val(), P: $("#pUnits").val(), K: $("#kUnits").val()}; 
-	console.log(cur_source);
-	console.log(sources);
 	sources.push(cur_source);
+	console.log(retrievedSources);
 	sourceTableFunc();
 	sourceTableClickListener();
-	$( "#add_source" ).collapsible( "option", "collapsed", true );
-}
+	$('#sourceName').val("");
+	$('#sourceUnit').val("");
+	$('#nUnits').val("");
+	$('#kUnits').val("");
+	$('#pUnits').val("");
+	// $( "#add_source" ).collapsible( "option", "collapsed", true );
 	
-
-// Adds collapsible div showing planned opperation
- /* function addPlanDiv(){
-	var field = $("#fieldPlan").val();
-	var	source = $('#sourcePlan').val();
-	var date = $('#date').val();
-	if($("#date").val().length ==''){
-		alert('Please fill in required information.')
-	}else{
-	$('#plList').append($('<div data-role="collapsible"><h3>'+date+ "," + field+'</h3><div data-role="fieldcontain"><ul><label for="fieldName">Field:</label><input type="text" id="fieldName" value="'+field+'" /><label for="sourceName">Source:</label><input type="text" id="sourceName" value="'+source+'" /><label for="planDate" class="select">Date:</label><input type="text" id="planDate" value="'+date+'"></div><ul></div></div>'));
-	$('[data-role=collapsible]').collapsible();
-		clearPlanIP();
+	
+	if(retrievedSources == null){
+			window.localStorage.setItem('retrievedSources', JSON.stringify(sources));
+			console.log(sources);
+	}else{  
+			retrievedSources.push(cur_source);
+			window.localStorage.setItem('retrievedSources', JSON.stringify(retrievedSources));
+			console.log('what it is.')
 	}
-}*/
 
-/*$( document ).on( "pageinit", function() {
-	runSelectAdd();
-});
-*/
-//Add operator name to selctmenu 
-/*function runSelectAdd(){
-
-    $('ui-selectmenu').on({
-       		popupafterclose: function(){ 
-         	setTimeout( function(){ $( '#addOperatorPop' ).popup( 'open' ) }, 100 );
-       		}
-       	});	
-    }
-
-
-
-function addOpName(){
-	var opName = $("#oN").val();
-	if($("#oN").val().length ==""){
-	alert('Please add operators name');
-	}else{
-		
-			$("#select_operator").selectmenu().selectmenu('refresh', true);
-	}
-}*/
-
-
-//Create list of source locations
-// function createSourceList(){
-// 	var  = document.getElementById('spTable');
-// 	for (var i = 0; i < sources.length; i++) {
-//  	var sorce = sources[i];
- 	
-
-// }
-
-// function clearPlanIP(){
-// 		$("#fieldPlan").val("");
-// 		$("#sourcePlan").val("");
-// 		$("#date").val("");
-// 	};
+	
 	
 	//Changes rate label to display selected unit of measure
-$(document).ready(
-		function() {
-		$("select[id = rateUnit").change(
-      function(){
-        var newText = $('option:selected',this).text();
-        $("label[for = number]").text(newText);
-		newText.bold();
-      });
- });
+		$(document).ready(
+			function() {
+				$("select[id = rateUnit").change(
+				function(){
+				var newText = $('option:selected',this).text();
+				$("label[for = number]").text(newText);
+				newText.bold();
+				});
+			});
+  }
   
-
-
   function calculateSpeed(){
-   var  rtSelect = cur_field.unit;
-  console.log(rtSelect);
-	if(rtSelect =='gal/ac'){
-		var rate =  cur_field.rate;
-		var width = 25
-		d = 43560/ width;
-		outPut = 4800/7;
-		x = 0.0113636364;	// 1 ft/min MPH
-		s = (d/(rate/outPut))*x;	
-	 document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>';
+  
+			var  rtSelect = cur_field.unit;
+				if(rtSelect =='gal/ac'){
+				var rate =  cur_field.rate;
+				var width = cur_spreader.width;
+				d = 43560/ width;
+				outPut = 4800/7;
+				x = 0.0113636364;	// 1 ft/min MPH
+				s = (d/(rate/outPut))*x;	
+				document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>';
 	
-	}else if (rtSelect == '1000gal/ac') {
-			console.log(rtSelect);
-			var rate = 1000 * cur_field.rate;
-			var width = 25
-			d = 43560/ width;
-			outPut = 4800/7;
-			x = 0.0113636364;	// 1 ft/min MPH
-			s = (d/(rate/outPut))*x;	
-	 document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>';
+			}else if (rtSelect == '1000gal/ac') {
+				var rate = 1000 * cur_field.rate;
+				var width = cur_spreader.width;
+				d = 43560/ width;
+				outPut = 4800/7;
+				x = 0.0113636364;	// 1 ft/min MPH
+				s = (d/(rate/outPut))*x;	
+				document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>';
 	 
-	} else if (rtSelect == 'tons/ac') {
-		console.log(rtSelect);
-			var rate = cur_field.rate;
-			var width = 25
-			d = 43560/ width;
-			outPut = 15/7;
-			x = 0.0113636364; //1 ft/ min to MPH
-			s = (d/(rate/outPut))*x;
-			console.log(s);
-		document.getElementById('speedReturn').innerHTML ='<strong>'+s.toFixed(1) +' (MPH)</strong>';
+			} else if (rtSelect == 'tons/ac') {
+				console.log(rtSelect);
+				var rate = cur_field.rate;
+				var width = cur_spreader.width;
+				d = 43560/ width;
+				outPut = 15/7;
+				x = 0.0113636364; //1 ft/ min to MPH
+				s = (d/(rate/outPut))*x;
+				console.log(s);
+			document.getElementById('speedReturn').innerHTML ='<strong>'+s.toFixed(1) +' (MPH)</strong>';
+			}
+			console.log(cur_field);
 	}
- };
- 
 
-	// $("#select_operator").on("change",function(event,ui) {
-	// 		if($('#select_operator').val()==='add'){
-	// 			$('ui-selectmenu').on({
-	// 				popupafterclose: function() {
-	// 					setTimeout(function(){ $('#addOperatorPop').popup('open')}, 100);
-	// 				}
-	// 			})
-	// 		}
-   
- //    });
-    
-  /*  $( document ).on( "pageinit", function() {
-      $( '.ui-selectmenu' ).on({
-       popupafterclose: function() {
-         setTimeout( function(){ $( '#addOperatorPop' ).popup( 'open' ) }, 100 );
-       }
-      });
-  });*/
+ 
