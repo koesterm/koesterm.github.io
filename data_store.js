@@ -24,7 +24,7 @@ var records = [];
 function lStorage(){
     if(retrievedRecords = null) {
         window.localStorage.setItem('records', JSON.stringify(records));
-        retrievedObject = window.localStorage.getItem('records');
+        var retrievedObject = window.localStorage.getItem('records');
         retrievedRecords = JSON.parse(retrievedObject);
         console.log(retrievedRecords);
     }else{
@@ -36,6 +36,51 @@ function lStorage(){
 }
 lStorage();
 
+// Local storage for operators.
+function opStored(){
+	if(retrievedOp = null){
+	window.localStorage.setItem('operators',JSON.stringify(operators));
+	retrievedOpObject = window.localStorage.getItem('operators');
+	retrievedOp = JSON.parse(retrievedOpObject);
+	
+	}else{
+	retrievedOpObject = window.localStorage.getItem('retrievedOp');
+	retrievedOp = JSON.parse(retrievedOpObject);
+	operatorsTableFunc;
+
+	}
+}
+opStored();
+// Local Storage for spreaders
+function  sourceStored(){
+	if(retrievedSources = null){
+	window.localStorage.setItem('sources',JSON.stringify(sources));
+	retrievedSourceObject = window.localStorage.getItem('sources');
+	retrievedSources = JSON.parse(retrievedSourceObject);
+	
+	}else{
+	retrievedSourceObject = window.localStorage.getItem('retrievedSources');
+	retrievedSources = JSON.parse(retrievedSourceObject);
+	sourceTableFunc;
+	
+	}
+}
+sourceStored();
+
+function  spreaderStored(){
+	if(retrievedSpreaders = null){
+	window.localStorage.setItem('spreaders',JSON.stringify(spreaders));
+	retrievedSpreaderObject = window.localStorage.getItem('spreaders');
+	retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
+	console.log(retrievedSpreaders);
+	}else{
+	retrievedSpreaderObject = window.localStorage.getItem('retrievedSpreaders');
+	retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
+	spreaderTableFunc;
+	console.log(retrievedSpreaders);
+	}
+}
+spreaderStored();
 
 
 function createSpreaderTable() {
@@ -95,7 +140,7 @@ function createSpreaderTable() {
 }	
 createSpreaderTable();
 
-function tableFunc (){
+function spreaderTableFunc (){
     if(document.getElementById('spTable') == null){
         appendTableRows();
     }else{
@@ -109,6 +154,9 @@ function tableFunc (){
 
 
 function appendTableRows(){ 
+if(retrievedSpreaders != null){
+	spreaders = retrievedSpreaders;
+	}
     var tableB = document.getElementById('spTable');
     for (var i = 0; i < spreaders.length; i++) {
      var row = tableB.insertRow(-1);
@@ -146,16 +194,20 @@ function appendTableRows(){
 appendTableRows();
 
 function saveSpreader(){
-    pushArray();
-    tableFunc();
+	var a  = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val() };
+	spreaders.push(a);
+    spreaderTableFunc();
     spTableClickListener();
-    $( "#add-spreader" ).collapsible( "option", "collapsed", true );
-
-}
-
-function pushArray (){
-var a  = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val() };
-spreaders.push(a);
+	spreaderStored();
+    // $( "#add-spreader" ).collapsible( "option", "collapsed", true );
+	if(retrievedSpreaders == null){
+		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(spreaders));
+		console.log(spreaders);
+	}else{  
+		retrievedSpreaders.push(a);
+		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(retrievedSpreaders));
+		console.log('what it is.')
+	}	
 }
 
 function clearSpText(){
@@ -169,11 +221,8 @@ function clearSpText(){
 
 $(document).ready(function(){
    spTableClickListener();
-
 });
-
 // spreader table click listener and highlights last selected spreader.
-
 function spTableClickListener(){
     if(retrievedRecords != undefined){
         last_element = retrievedRecords[retrievedRecords.length - 1];
@@ -200,7 +249,9 @@ function spTableClickListener(){
                 }
                 $("#spreaderBtn").text(cur_spreader.name);
             console.log(spreaders[i]);
+			calculateSpeed();
             });
+			
     }else{
          $('#spTable').find('tr').click(function(){
             $(this).siblings().removeClass("highlighted");
@@ -213,8 +264,8 @@ function spTableClickListener(){
                 }
     			$("#spreaderBtn").text(cur_spreader.name);
             console.log(spreaders[i]);
+			calculateSpeed(); 
         });
-        
     }
 }    
 
@@ -290,6 +341,9 @@ function sourceTableFunc() {
 
 
 function appendSourceTableRows(){ 
+	if(retrievedSources !== null){
+	sources= retrievedSources;
+	}
     var tableB = document.getElementById('sourceTable');
     for (var i = 0; i < sources.length; i++) {
      var row = tableB.insertRow(-1);
@@ -322,7 +376,8 @@ function appendSourceTableRows(){
      */
 
      tableB.children[0].appendChild(row);
-    }
+    
+	}
 }
 appendSourceTableRows();
 
@@ -470,11 +525,11 @@ function createRecordTable() {
     tr.appendChild(th);
     tbdy.appendChild(tr);
     
-   /* th = document.createElement('th');
-    th.innerHTML = "Delete";
-    th.width = '16.6%';
-    tr.appendChild(th);
-    tbdy.appendChild(tr);*/
+	// th = document.createElement('th');
+     // th.innerHTML = "Fill Level";
+     // th.width = '16.6%';
+     // tr.appendChild(th);
+    // tbdy.appendChild(tr);
     
     gHeaderCreated = true;
 
@@ -575,11 +630,11 @@ console.log(aName);
      recordAmount.textAlign = 'center';
      recordAmount.appendChild(document.createTextNode(aName[i].cSpred.capacity+"("+ aName[i].cSpred.unit +")" ));
      
-     /*var spDel = row.insertCell(-1);
-     spDel.textAlign = 'center';
-     spDel.innerHTML = '<button id="deleteRow">Delete</button>';
-     row.appendChild(spDel);
-     */
+     // var spFill = row.insertCell(-1);
+     // spFill.textAlign = 'center';
+     // spFill.innerHTML = $('#spFill').val();;
+     // row.appendChild(spFill);
+     
 
      tableB.children[0].appendChild(row);
 	 
@@ -710,6 +765,7 @@ function fieldTableClickListener(){
                     }
                     $("#fieldBtn").text(cur_field.name);
                 });
+				calculateSpeed();
             }else{
 
              $('#fieldsTable').find('tr').click(function(){
@@ -772,17 +828,46 @@ createOpTable();
 
 
 function saveOperator(){
+  
+  
+  // if(retrievedOp == null){
+    // window.localStorage.setItem('operators', JSON.stringify(operators));
+    // console.log("Saying it's null");   
+    // }else{  
+	// retrievedOp.pu
+    // window.localStorage.setItem('retrievedOp', JSON.stringify(retrievedOp));
+    // console.log("it exists");
+    // }
+
+if($("#opName").val().length ==''){
+	alert("Please enter operator's name");
+	}else{
  var opname = $("#opName").val();
  newOperator = opname;
  operators.push(newOperator);
+ window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
+  console.log(retrievedOp);
  console.log(operators);
  operatorsTableFunc();
  $("#opName").val('');
- $("#add_operator").collapsible( "option", "collapsed", true );
- OpTableClickListener();   
+ // $("#add_operator").trigger( "collapse");
+ opTableClickListener(); 
+opStored(); 
+}
 }
 
+
+function cancelOperator(){
+	$("#opName").val("");
+	$("#add_operator").collapsible("collapse");
+}
+
+
 function appendOpTableRows(){ 
+if(retrievedOp !== null){
+	operators= retrievedOp;
+        
+    } 
     var tableB = document.getElementById('operator_table');
     for (var i = 0; i < operators.length; i++) {
      var row = tableB.insertRow(-1);
@@ -800,11 +885,11 @@ appendOpTableRows();
 
 
 $(document).ready(function(){
-   OpTableClickListener();
+   opTableClickListener();
 });
 
 
-function OpTableClickListener(){
+function opTableClickListener(){
     if(retrievedRecords != undefined){
          last_element = retrievedRecords[retrievedRecords.length - 1];
             $('operator_table, td').filter(function(){
@@ -829,7 +914,8 @@ function OpTableClickListener(){
                     break;
                 }
                 $("#operatorBtn").text(cur_operator);
-            });        
+            });
+				calculateSpeed();
     }else{      
      $('#operator_table').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
