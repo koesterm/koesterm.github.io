@@ -11,15 +11,15 @@
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
 
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<script src="drive.js"></script>
+<!--<script src="drive.js"></script>-->
 <script>
 $(document).bind('mobileinit',function(){
 		$.mobile.selectmenu.prototype.options.nativeMenu = false;
 	});
-	</script>
+</script>
 </head>
 	
-<body <!--onload="handleClientLoad()"-->>
+ <body>
 	
 	<!-- Home Page
 =======================================================================-->
@@ -31,7 +31,7 @@ $(document).bind('mobileinit',function(){
 					<li><a href="#home" data-role="button">Dashboard</a></li>
 					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
 					<li><a href="#recordPage" data-role="button">Records</a></li>
-					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
+					<!-- <li><a href="#plan_page" data-role="button" onclick ="return downloadCSVFile()">Download CSV</a></li>  -->
 				</ul>
 			</div>
 		</div>
@@ -40,7 +40,7 @@ $(document).bind('mobileinit',function(){
 				<a href="#spreader-list" id="spreaderBtn" data-role="button" data-transition="slide" class="custom-btn">Manure Spreaders</a>
 				<a href="#field-list" id="fieldBtn" data-role="button" data-transition="slide" class="custom-btn" >Field Lists </a>
 				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn">Source</a>
-				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operater List</a>
+				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operator List</a>
 			</div>
 			<div id="mainRight">
 				<select  id="spFill">
@@ -230,8 +230,8 @@ $(document).bind('mobileinit',function(){
 		<div data-role="fieldcontain" id="colSource">
 				<div>
 				<label for="sourceName">Source Name:</label><input type="text" id="sourceName" value="" />
+				</div>
 					<h4 Style="text-align: center">Nutrient Content</h4>
-				</div>	
 				<div style="text-align: center;">
 				<select id="sourceUnit" style="text-align: center;">
 				<option value="">Select Unit Measure of Nutrient</option>
@@ -337,13 +337,13 @@ $(document).bind('mobileinit',function(){
 		<div id="operatorList">
 			<table id="operator_table"></table>
 		</div>
-		<div data-role="collapsible" id="add_operator">
+		<div id="add_operator" data-role="collapsible">
 			<h3>Add Operator</h3>
 			<div data-role="fieldcontain" id="">
 				<input type="text" id="opName" value="" placeholder="Operator's Name" />
 			</div>
 			<div class="ui-grid-a">
-				<div class="ui-block-a"><button id="cancelOp" type="submit">Cancel</button></div>
+				<div class="ui-block-a"><button id="cancelOp" type="submit" onclick="cancelOperator()">Cancel</button></div>
 				<div class="ui-block-b"><button id="saveOp" type="submit" onclick="saveOperator()">Save</button></div>
 			</div>
 		</div>
@@ -367,18 +367,18 @@ $(document).bind('mobileinit',function(){
 				</ul>
 			</div>
 	</div>
-	<div data-role="content" id="recordDiv">
+	<div data-role="content" id="recordDiv" style="overflow: auto">
 		<table id="recordTable"></table>
 	</div>
 
 </div>
 </body>
-<script src="http://code.jquery.com/mobile/1.4.4/jquery.mobile-1.4.4.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 <script src="https://apis.google.com/js/client.js?onload=onApiLoad"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=drawing"></script>
 <script src="ma-script.js"></script>
 <script src="data_store.js"></script>
-<!--<script src="local_store.js"></script>-->
+<script src="local_store.js"></script>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
