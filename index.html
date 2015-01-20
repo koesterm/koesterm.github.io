@@ -42,16 +42,19 @@ $(document).bind('mobileinit',function(){
 				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn">Source</a>
 				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operator List</a>
 			</div>
-			<div id="mainRight">
+			<div id="mainRight" style="text-align: center;">
+			<label id="spreadFillLevel">Spreader Fill Level</label>
 				<select  id="spFill">
 					<option value="">Fill Level</option>
-					<option value="full">Full</option>
-					<option value="threeFourths">3/4</option>
-					<option value="oneHalf">1/2</option>
-					<option value="onequarter">1/4</option>
+					<option value="100%" selected="100%">Full</option>
+					<option value="75%">3/4</option>
+					<option value="50%">1/2</option>
+					<option value="25%">1/4</option>
 				</select>
-			<div id="loadsOnField" style="text-align: center;" class="infoReturn">Loads on field</div>
-			<div id="loadsRemoved" style="text-align: center;" class="infoReturn">Loads removed</div>
+			<div id="loadsOnField" style="text-align: center;" class="infoReturn">Loads on field<br>
+			<label id="numberLonF"></label></div>
+			<div id="loadsRemoved" style="text-align: center;" class="infoReturn">Loads removed<br>
+			<label id="numberLFS"></label></div>
 			</div>
 		</div>
 		<div id="targetRate" style="text-align: center;">
@@ -258,7 +261,7 @@ $(document).bind('mobileinit',function(){
 	=========================================================-->
 	<div data-role="page" id="map-page" data-theme="d">
 		<div data-role="header" class="ui-header" data-add-back-btn="true">
-			<h1>Maps</h1>
+			<h1>Map</h1>
 			<div data-role="navbar" class="navbar">
 				<ul>
 					<li><a href="#home" data-role="button">Dashboard</a></li>
