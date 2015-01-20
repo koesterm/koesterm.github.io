@@ -519,43 +519,43 @@ function createRecordTable() {
     
     th = document.createElement('th');
     th.innerHTML = "Date";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
 
     th = document.createElement('th');
     th.innerHTML = "Time";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
 
     th = document.createElement('th');
     th.innerHTML = "Operator";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
 
     th = document.createElement('th');
     th.innerHTML = "Field";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
 
     th = document.createElement('th');
     th.innerHTML = "Source";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
 
     th = document.createElement('th');
     th.innerHTML = "Spreader";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
     
     th = document.createElement('th');
     th.innerHTML = "Amount";
-    th.width = '16.6%';
+    th.width = '10%';
     tr.appendChild(th);
     tbdy.appendChild(tr);
     
 	th = document.createElement('th');
      th.innerHTML = "Load Fill Level";
-     th.width = '16.6%';
+     th.width = '10%';
      tr.appendChild(th);
     tbdy.appendChild(tr);
     
