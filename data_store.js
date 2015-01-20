@@ -51,6 +51,7 @@ function opStored(){
 	}
 }
 opStored();
+
 // Local Storage for spreaders
 function  sourceStored(){
 	if(retrievedSources = null){
@@ -385,7 +386,21 @@ $(document).ready(function(){
    sourceTableClickListener();
 });
 
-var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}}
+var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "fillLevel": ""}
+
+
+function startUnload(){
+    recordPath();
+    unloadingDiv()
+    getDateTime();
+    cur_record.cSpred = cur_spreader;
+    cur_record.cSource = cur_source;
+    cur_record.date = spreadDate;
+    cur_record.Time = spreadTime;
+    cur_record.field = cur_field;
+    cur_record.operator = cur_operator; 
+    cur_record.fillLevel = $("#spFill").val();
+}
 
 function sourceTableClickListener(){
 
@@ -430,18 +445,31 @@ function sourceTableClickListener(){
     }
 }
 
-function startUnload(){
-	recordPath();
-    unloadingDiv()
-    getDateTime();
-    cur_record.cSpred = cur_spreader;
-    cur_record.cSource = cur_source;
-    cur_record.date = spreadDate;
-    cur_record.Time = spreadTime;
-    cur_record.field = cur_field;
-    cur_record.operator = cur_operator; 
-    
+//counts the number of loads from source
+
+$(document).ready(function(){
+   numberLoadsFromSource();
+});
+
+function numberLoadsFromSource(){
+    if(retrievedRecords != null){
+        var count = 1;
+        var currentSN = $("#sourceTable tr.highlighted td")[0].innerHTML;
+            for(i =0; i< retrievedRecords.length; i++){
+                if (retrievedRecords[i].cSource.name === currentSN){
+                numberOfLoadsS = count++;
+                document.getElementById('numberLFS').innerHTML ='<strong>'+numberOfLoadsS+'</strong>';
+                }
+        }
+    }
 }
+
+// $(document).ready(function(){
+//     var myselect = $("#spFill");
+//     myselect[0].selectedIndex = 3;
+//     myselect.selectmenu("refresh");
+// });
+
 
 /*Function returning Date and Time*/
 function getDateTime() {
@@ -525,11 +553,11 @@ function createRecordTable() {
     tr.appendChild(th);
     tbdy.appendChild(tr);
     
-	// th = document.createElement('th');
-     // th.innerHTML = "Fill Level";
-     // th.width = '16.6%';
-     // tr.appendChild(th);
-    // tbdy.appendChild(tr);
+	th = document.createElement('th');
+     th.innerHTML = "Load Fill Level";
+     th.width = '16.6%';
+     tr.appendChild(th);
+    tbdy.appendChild(tr);
     
     gHeaderCreated = true;
 
@@ -561,10 +589,15 @@ function loadComplete(){
     records.push(cur_record);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
-    console.log(records);   
+    console.log(records);
+    lStorage();
+    numberLoadsOnField();
+    numberLoadsFromSource();   
     }else{  
     retrievedRecords.push(cur_record);
     window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
+    numberLoadsOnField();
+    numberLoadsFromSource();
     console.log(retrievedRecords);
     }
 
@@ -630,10 +663,9 @@ console.log(aName);
      recordAmount.textAlign = 'center';
      recordAmount.appendChild(document.createTextNode(aName[i].cSpred.capacity+"("+ aName[i].cSpred.unit +")" ));
      
-     // var spFill = row.insertCell(-1);
-     // spFill.textAlign = 'center';
-     // spFill.innerHTML = $('#spFill').val();;
-     // row.appendChild(spFill);
+     var SpreaderFillLevel = row.insertCell(-1);
+     SpreaderFillLevel.textAlign = 'center';
+     SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
      
 
      tableB.children[0].appendChild(row);
@@ -787,6 +819,33 @@ function fieldTableClickListener(){
             });
     }
 }
+
+// Counts number of loads spread on field
+$(document).ready(function(){
+    numberLoadsOnField();
+});
+
+function numberLoadsOnField(){
+    if(retrievedRecords != null){
+    var count = 1;
+    var currentFN= $("#fieldsTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< retrievedRecords.length; i++){
+            if (retrievedRecords[i].field.name === currentFN){
+                numberOfLoadsF = count++;
+                document.getElementById('numberLonF').innerHTML ='<strong>'+numberOfLoadsF+'</strong>';
+            }
+        }
+    }
+}
+
+// var count = 0;
+// for(var i = 0; i < array.length; ++i){
+//     if(array[i] == 2)
+//         count++;
+// }
+
+
+
 
 function createOpTable() {
     var cols = "4";
