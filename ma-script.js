@@ -63,7 +63,7 @@ function recordPath() {
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 250, 
+            maximumAge: 250, // 2.5 seconds
             enableHighAccuracy: true
  			 
         }
@@ -74,14 +74,14 @@ function recordPath() {
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
-        3500 //stop checking after 5 seconds
+        3500 //stop checking after 3.5 seconds
     );
 };
 
 var pathTimer = window.setInterval( function () {
         recordPath();
     }, 
-    10000 //check every 15 seconds
+    10000 //check every 10 seconds
 );	
 	
 
@@ -130,11 +130,16 @@ function createMap(){
           });
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
-	}		
+	}	
+	if(retrievedRecords != null){
+		fields = retrievedRecords;
+	}else{
 		for(var i=0; i < fields.length; ++i){
 			fields[i].polygon.setMap(map);
      	}
 	}
+}
+
 	
 
 $( document ).on( "pageinit", "#add_field", function() {
@@ -330,7 +335,6 @@ function saveSource(){
 				console.log(s);
 			document.getElementById('speedReturn').innerHTML ='<strong>'+s.toFixed(1) +' (MPH)</strong>';
 			}
-			console.log(cur_field);
+			
 	}
 
- 
