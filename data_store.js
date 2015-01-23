@@ -20,7 +20,6 @@ var sources = [
 
 var records = [];
 
-
 function lStorage(){
     if(retrievedRecords = null) {
         window.localStorage.setItem('records', JSON.stringify(records));
@@ -402,21 +401,41 @@ function startUnload(){
     cur_record.fillLevel = $("#spFill").val();
 }
 
-function sourceTableClickListener(){
+function loadComplete(){
+	postPath();
+    records.push(cur_record);
+    if(retrievedRecords == null){
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
+    console.log(records);
+    lStorage();
+    numberLoadsOnField();
+    numberLoadsFromSource();   
+    }else{  
+    retrievedRecords.push(cur_record);
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
+    numberLoadsOnField();
+    numberLoadsFromSource();
+    }
+    recordTableFunc();
+	cur_record = {};
 
- if(retrievedRecords != undefined){
-    last_element = retrievedRecords[retrievedRecords.length - 1];
-    $('sourceTable, td').filter(function(){
+	// appendSpreadsheet();
+}
+
+
+function sourceTableClickListener(){
+	if(retrievedRecords != undefined){
+		last_element = retrievedRecords[retrievedRecords.length - 1];
+		$('sourceTable, td').filter(function(){
         return $(this).text() == last_element.cSource.name;
-    }).parent('sourceTable, tr').toggleClass('highlighted');
-       var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+		}).parent('sourceTable, tr').toggleClass('highlighted');
+		var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
         for(i =0; i< sources.length; i++)
             if (sources[i].name === cur_source_name){
                 cur_source = sources[i];
                 break;
             }
             $("#sourceBtn").text(cur_source.name);
-        console.log(cur_source);
 
     $('#sourceTable').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
@@ -508,10 +527,10 @@ function createRecordTable() {
     var bTbl = document.createElement('table');
     
 
-    bTbl.style.width = '80%';
+    bTbl.style.width = '85%';
     bTbl.style.align = 'center';
     bTbl.setAttribute('border','1');
-    bTbl.style.marginLeft = '5%';
+    bTbl.style.marginLeft = '7.5%';
     var tbdy = document.createElement('tbody');
 
     var tr = document.createElement('tr');
@@ -577,50 +596,12 @@ function recordTableFunc() {
         Table.innerHTML = ""
         createRecordTable();
         appendRecordTableRows();
+		console.log('yep');
     }
      $('#recordTable').find('tbdy').click(function(){
             $(this).siblings().removeClass("highlighted");
     });
-
 }   
-
-function loadComplete(){
-	postPath();
-    records.push(cur_record);
-    if(retrievedRecords == null){
-    window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
-    console.log(records);
-    lStorage();
-    numberLoadsOnField();
-    numberLoadsFromSource();   
-    }else{  
-    retrievedRecords.push(cur_record);
-    window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
-    numberLoadsOnField();
-    numberLoadsFromSource();
-    console.log(retrievedRecords);
-    }
-
-
-
-
-
-
-
-     // if(records.length > 0) {
-     //        window.localStorage.setItem('records', JSON.stringify(records));
-     //    } else {
-     //        var retrievedObject = window.localStorage.getItem('records');
-     //        retrievedRecords = JSON.parse(retrievedObject);
-     //        console.log(retrievedRecords);    
-     //    }
-
-    recordTableFunc();
-	cur_record = {};
-	// appendSpreadsheet();
-	
-}
-
 
 function appendRecordTableRows(){ 
 
@@ -629,11 +610,10 @@ function appendRecordTableRows(){
     }else{
         var aName = retrievedRecords;
     } 
-console.log(aName);
-    var tableB = document.getElementById('recordTable');
+    var recordTab = document.getElementById('recordTable');
     for (var i = 0; i < aName.length; i++) {
-     var row = tableB.insertRow(-1);
-      tableB.style.textAlign = 'center';
+     var row = recordTab.insertRow(-1);
+      recordTab.style.textAlign = 'center';
      
      var recordDate = row.insertCell(-1);
      recordDate.textAlign = 'right';
@@ -668,7 +648,7 @@ console.log(aName);
      SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
      
 
-     tableB.children[0].appendChild(row);
+     recordTab.children[0].appendChild(row);
 	 
 	 
     }
@@ -812,9 +792,6 @@ function fieldTableClickListener(){
                         break;
                     }
         			$("#fieldBtn").text(cur_field.name);
-                console.log(fields[i]);
-                console.log(cur_field);
-                console.log(records);
                 calculateSpeed();     
             });
     }
@@ -905,7 +882,6 @@ if($("#opName").val().length ==''){
  newOperator = opname;
  operators.push(newOperator);
  window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
-  console.log(retrievedOp);
  console.log(operators);
  operatorsTableFunc();
  $("#opName").val('');
