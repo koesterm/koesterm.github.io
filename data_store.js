@@ -527,10 +527,10 @@ function createRecordTable() {
     var bTbl = document.createElement('table');
     
 
-    bTbl.style.width = '85%';
+    bTbl.style.width = '90%';
     bTbl.style.align = 'center';
     bTbl.setAttribute('border','1');
-    bTbl.style.marginLeft = '7.5%';
+    bTbl.style.marginLeft = '5%';
     var tbdy = document.createElement('tbody');
 
     var tr = document.createElement('tr');
