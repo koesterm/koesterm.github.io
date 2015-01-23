@@ -51,7 +51,26 @@ startDiv();
 $(document).on("mobileinit", function() {
 	$.mobile.page.options.addBackBtn = true;
 	});
-	
+
+	function altRows(recordTable){
+	if(document.getElementsByTagName){  
+		
+		var table = document.getElementById('recordTable');  
+		var rows = table.getElementsByTagName("tr"); 
+		 
+		for(i = 0; i < rows.length; i++){          
+			if(i % 2 == 0){
+				rows[i].className = "evenrowcolor";
+			}else{
+				rows[i].className = "oddrowcolor";
+			}      
+		}
+	}
+}
+
+window.onload=function(){
+	altRows('recordTable');
+}
 	
 function recordPath() {
     var geolocation = navigator.geolocation.watchPosition( 
