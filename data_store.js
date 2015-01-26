@@ -11,7 +11,7 @@ var spreaders = [
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
 ];
-
+var pathTimer;
 
 var sources = [
     {"name":"Pit one", nutrientUnit :"Lbs/1000Gallon", N: 20, P : 22, K: 13},
@@ -422,6 +422,7 @@ function loadComplete(){
 	cur_record = {};
 	// appendSpreadsheet();
 	cur_path = [];
+	killPathTimer();
 }
 
 
