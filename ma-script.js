@@ -141,10 +141,10 @@ function createMap(){
 					latLngBounds.extend(cur_path[j]);
 					// Place the marker
 					new google.maps.Marker({
-					map: map,
-					position: cur_path[j],
-					title: "Point " + (j + 1)
-					});
+					// map: map,
+					// position: cur_path[j],
+					// title: "Point " + (j + 1)
+					// });
 					
 				}
 			}
