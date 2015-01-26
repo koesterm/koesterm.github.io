@@ -92,7 +92,6 @@ function recordPath() {
 
 	);
 	
-
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
@@ -100,14 +99,19 @@ function recordPath() {
     );
 };
 
-var pathTimer = window.setInterval( function () {
-        recordPath();
-    }, 
-    10000 //check every 10 seconds
-);		
+function timerFunc(){
+pathTimer=setInterval(function () {myTimer()}, 10000);
+
+function myTimer() {
+    recordPath();
+}
+}
+
 function killPathTimer(){
 	clearInterval(pathTimer);
-	}
+}
+	
+
 	//Map
 function createMap(){
     var defaultLatLng = new google.maps.LatLng(40.4240,-86.9290);  // Default to Purdue Universitywhen no geolocation support
@@ -137,7 +141,6 @@ function createMap(){
 					decoded = retrievedRecords[i].path;
 					cur_path = google.maps.geometry.encoding.decodePath(decoded);
 					for(var j = 0; j < cur_path.length; j++) {
-					console.log(cur_path[i]);
 					latLngBounds.extend(cur_path[j]);
 					// Place the marker
 					new google.maps.Marker({
