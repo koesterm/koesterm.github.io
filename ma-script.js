@@ -156,7 +156,7 @@ function createMap(){
             path: cur_path,
             strokeColor: '#0000FF',
             strokeOpacity: 1.0,
-            strokeWeight: 3
+            strokeWeight: 4
           });
 		}else{
           for(var i = 0; i < cur_path.length; i++) {
