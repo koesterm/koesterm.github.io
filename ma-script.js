@@ -10,6 +10,9 @@ var map;
 var cur_source;
 var latlng;
 var cur_path = [];
+var retrievedRecords = [];
+var polyline = [];
+ thisOne = [];
  
 var samplePoly = new google.maps.Polygon({
     paths: [
@@ -28,9 +31,12 @@ fields = [{name :"Back 40", unit: "1000gal/ac", rate: "7", area: "9000" , polygo
 
 
 function postPath(){
-cur_record.path = cur_path;
+cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
+console.log(cur_record.path);
 console.log(cur_path);
+
 clearInterval(pathTimer);
+
 }
 
 
@@ -51,7 +57,7 @@ startDiv();
 $(document).on("mobileinit", function() {
 	$.mobile.page.options.addBackBtn = true;
 	});
-
+// Record Table Style Function
 	function altRows(recordTable){
 	if(document.getElementsByTagName){  
 		
@@ -67,10 +73,10 @@ $(document).on("mobileinit", function() {
 		}
 	}
 }
-
 window.onload=function(){
 	altRows('recordTable');
 }
+
 	
 function recordPath() {
     var geolocation = navigator.geolocation.watchPosition( 
@@ -82,7 +88,7 @@ function recordPath() {
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 250, // 2.5 seconds
+            maximumAge: 200, // 2.0 seconds
             enableHighAccuracy: true
  			 
         }
@@ -93,16 +99,16 @@ function recordPath() {
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
-        3500 //stop checking after 3.5 seconds
+        3000 //stop checking after 3.0 seconds
     );
-};
 
-var pathTimer = window.setInterval( function () {
+
+pathTimer = window.setInterval( function () {
         recordPath();
     }, 
-    10000 //check every 10 seconds
+    10000 //check every 7 seconds
 );	
-	
+};	
 
 	//Map
 function createMap(){
@@ -126,10 +132,32 @@ function createMap(){
             center: cur_path[0],
             mapTypeId: google.maps.MapTypeId.SATELLITE
 			};
-
         var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
-		
 		var latLngBounds = new google.maps.LatLngBounds();
+		if(retrievedRecords != null){
+			for(var i=0; i < retrievedRecords.length; i++){
+					decoded = retrievedRecords[i].path;
+					cur_path = google.maps.geometry.encoding.decodePath(decoded);
+					for(var j = 0; j < cur_path.length; j++) {
+					console.log(cur_path[i]);
+					latLngBounds.extend(cur_path[j]);
+					// Place the marker
+					new google.maps.Marker({
+					map: map,
+					position: cur_path[j],
+					title: "Point " + (j + 1)
+					});
+					
+				}
+			}
+			 var polyline = new google.maps.Polyline({
+            map: map,
+            path: cur_path,
+            strokeColor: '#0000FF',
+            strokeOpacity: 1.0,
+            strokeWeight: 3
+          });
+		}else{
           for(var i = 0; i < cur_path.length; i++) {
             latLngBounds.extend(cur_path[i]);
             // Place the marker
@@ -139,6 +167,7 @@ function createMap(){
               title: "Point " + (i + 1)
             });
           }
+		  }
           // Creates the polyline object
           var polyline = new google.maps.Polyline({
             map: map,
@@ -150,17 +179,11 @@ function createMap(){
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
 	}	
-	if(retrievedRecords != null){
-		fields = retrievedRecords;
-	}else{
 		for(var i=0; i < fields.length; ++i){
 			fields[i].polygon.setMap(map);
      	}
 	}
-}
-
 	
-
 $( document ).on( "pageinit", "#add_field", function() {
 	addFieldMap();
 });
