@@ -34,9 +34,6 @@ function postPath(){
 cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
 console.log(cur_record.path);
 console.log(cur_path);
-
-clearInterval(pathTimer);
-
 }
 
 
@@ -88,7 +85,7 @@ function recordPath() {
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 200, // 2.0 seconds
+            maximumAge: 2500, // 2.5 seconds
             enableHighAccuracy: true
  			 
         }
@@ -101,15 +98,16 @@ function recordPath() {
         }, 
         3000 //stop checking after 3.0 seconds
     );
+};
 
-
-pathTimer = window.setInterval( function () {
+var pathTimer = window.setInterval( function () {
         recordPath();
     }, 
-    10000 //check every 7 seconds
-);	
-};	
-
+    10000 //check every 10 seconds
+);		
+function killPathTimer(){
+	clearInterval(pathTimer);
+	}
 	//Map
 function createMap(){
     var defaultLatLng = new google.maps.LatLng(40.4240,-86.9290);  // Default to Purdue Universitywhen no geolocation support
