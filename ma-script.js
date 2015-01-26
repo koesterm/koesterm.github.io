@@ -140,11 +140,11 @@ function createMap(){
 					console.log(cur_path[i]);
 					latLngBounds.extend(cur_path[j]);
 					// Place the marker
-					//new google.maps.Marker({
-					// map: map,
-					// position: cur_path[j],
-					// title: "Point " + (j + 1)
-					// });
+					new google.maps.Marker({
+					map: map,
+					position: cur_path[j],
+					title: "Point " + (j + 1)
+					});
 					
 				}
 			}
