@@ -35,6 +35,7 @@ function lStorage(){
 }
 lStorage();
 
+
 // Local storage for operators.
 function opStored(){
 	if(retrievedOp = null){
@@ -66,9 +67,9 @@ function  sourceStored(){
 	}
 }
 sourceStored();
-
+retrievedSpreaders = [];
 function  spreaderStored(){
-	if(retrievedSpreaders = null){
+	if(retrievedSpreaders == null){
 	window.localStorage.setItem('spreaders',JSON.stringify(spreaders));
 	retrievedSpreaderObject = window.localStorage.getItem('spreaders');
 	retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
@@ -400,13 +401,14 @@ function startUnload(){
     cur_record.operator = cur_operator; 
     cur_record.fillLevel = $("#spFill").val();
 }
+	
+
 
 function loadComplete(){
 	postPath();
     records.push(cur_record);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
-    console.log(records);
     lStorage();
     numberLoadsOnField();
     numberLoadsFromSource();   
@@ -418,8 +420,8 @@ function loadComplete(){
     }
     recordTableFunc();
 	cur_record = {};
-
 	// appendSpreadsheet();
+	cur_path = [];
 }
 
 
@@ -527,10 +529,10 @@ function createRecordTable() {
     var bTbl = document.createElement('table');
     
 
-    bTbl.style.width = '90%';
+    bTbl.style.width = '85%';
     bTbl.style.align = 'center';
     bTbl.setAttribute('border','1');
-    bTbl.style.marginLeft = '5%';
+    bTbl.style.marginLeft = '7.5%';
     var tbdy = document.createElement('tbody');
 
     var tr = document.createElement('tr');
@@ -596,7 +598,6 @@ function recordTableFunc() {
         Table.innerHTML = ""
         createRecordTable();
         appendRecordTableRows();
-		console.log('yep');
     }
      $('#recordTable').find('tbdy').click(function(){
             $(this).siblings().removeClass("highlighted");
