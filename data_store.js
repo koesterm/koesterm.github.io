@@ -2,6 +2,7 @@
 var cur_operator;
 var newOperator = {};
 var operators = ["Matt", "Luke", "Sam", "Ray"];
+// var operators = [];
 var cur_field;
 var cur_source;
 var cur_spreader;
@@ -11,12 +12,17 @@ var spreaders = [
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
 ];
+// var spreaders = [];
+var fields = [];
+
 var pathTimer;
 
 var sources = [
     {"name":"Pit one", nutrientUnit :"Lbs/1000Gallon", N: 20, P : 22, K: 13},
     {"name": "Pit two", nutrientUnit :"Lbs/Ton", N:18, P:26, K: 26}
 ]; 
+
+// var sources = [];
 
 var records = [];
 
@@ -34,54 +40,89 @@ function lStorage(){
     }
 }
 lStorage();
-
+console.log(fields);
+console.log(spreaders)
 
 // Local storage for operators.
 function opStored(){
-	if(retrievedOp = null){
-	window.localStorage.setItem('operators',JSON.stringify(operators));
-	retrievedOpObject = window.localStorage.getItem('operators');
-	retrievedOp = JSON.parse(retrievedOpObject);
-	
-	}else{
-	retrievedOpObject = window.localStorage.getItem('retrievedOp');
-	retrievedOp = JSON.parse(retrievedOpObject);
-	operatorsTableFunc;
-
-	}
+    if(retrievedOp = null){
+    window.localStorage.setItem('operators',JSON.stringify(operators));
+    retrievedOpObject = window.localStorage.getItem('operators');
+    retrievedOp = JSON.parse(retrievedOpObject);
+    
+    }else{
+    retrievedOpObject = window.localStorage.getItem('retrievedOp');
+    retrievedOp = JSON.parse(retrievedOpObject);
+    }
 }
 opStored();
 
 // Local Storage for spreaders
 function  sourceStored(){
-	if(retrievedSources = null){
-	window.localStorage.setItem('sources',JSON.stringify(sources));
-	retrievedSourceObject = window.localStorage.getItem('sources');
-	retrievedSources = JSON.parse(retrievedSourceObject);
-	
-	}else{
-	retrievedSourceObject = window.localStorage.getItem('retrievedSources');
-	retrievedSources = JSON.parse(retrievedSourceObject);
-	sourceTableFunc;
-	
-	}
+    if(retrievedSources = null){
+    window.localStorage.setItem('sources',JSON.stringify(sources));
+    retrievedSourceObject = window.localStorage.getItem('sources');
+    retrievedSources = JSON.parse(retrievedSourceObject);
+    
+    }else{
+    retrievedSourceObject = window.localStorage.getItem('retrievedSources');
+    retrievedSources = JSON.parse(retrievedSourceObject);
+    sourceTableFunc;
+    
+    }
 }
 sourceStored();
+
 retrievedSpreaders = [];
-function  spreaderStored(){
-	if(retrievedSpreaders == null){
-	window.localStorage.setItem('spreaders',JSON.stringify(spreaders));
-	retrievedSpreaderObject = window.localStorage.getItem('spreaders');
-	retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
-	console.log(retrievedSpreaders);
-	}else{
-	retrievedSpreaderObject = window.localStorage.getItem('retrievedSpreaders');
-	retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
-	spreaderTableFunc;
-	console.log(retrievedSpreaders);
-	}
+function spreaderStored(){
+    if(retrievedSpreaders == null){
+    window.localStorage.setItem('spreaders',JSON.stringify(spreaders));
+    retrievedSpreaderObject = window.localStorage.getItem('spreaders');
+    retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
+    console.log(retrievedSpreaders);
+    }else{
+    retrievedSpreaderObject = window.localStorage.getItem('retrievedSpreaders');
+    retrievedSpreaders = JSON.parse(retrievedSpreaderObject);
+    }
 }
 spreaderStored();
+
+function fieldsStored(){
+    if(retrievedFields == null){
+    window.localStorage.setItem('fields',JSON.stringify(fields));
+    retrievedFieldsObject = window.localStorage.getItem('fields');
+    retrievedFields = JSON.parse(retrievedFieldsObject);
+	console.log("fieldStored rf is null")
+    }else{
+    retrievedFieldsObject = window.localStorage.getItem('retrievedFields');
+    retrievedFields = JSON.parse(retrievedFieldsObject);
+    console.log('fieldStored - rf is not null');
+    }
+}
+fieldsStored();
+
+function saveField(){
+    console.log(fields);
+	var field = { name: $("#fieldName").val(), unit: $("#rateUnit").val(), rate: $("#rateValue").val(), area: areaAcres, polygon: encodePGon }; 
+	if(fields == null){
+		fields = [field];
+		console.log('fields = field');
+		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
+	}else{
+		fields.push(field);
+		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
+		field = {};
+	}
+	
+	console.log(fields);
+	console.log(retrievedFields);
+	fieldsTableFunc();
+	fieldTableClickListener();
+	addFieldMap();
+	fieldsStored(); 
+	field = {};
+	window.location.href = "#field-list";
+}
 
 
 function createSpreaderTable() {
@@ -91,15 +132,15 @@ function createSpreaderTable() {
     var bTbl = document.createElement('table');
 
     bTbl.style.width = '100%';
-	bTbl.style.align = 'center';
+    bTbl.style.align = 'center';
     bTbl.setAttribute('border','1');
     bTbl.fontsize ='13px';
     var tbdy = document.createElement('tbody');
 
     var tr = document.createElement('tr');
     tr.style.textAlign = 'center'
-	
-	th = document.createElement('th');
+    
+    th = document.createElement('th');
     th.innerHTML = "Name";
     th.width = '16.6%';
     tr.appendChild(th);
@@ -114,23 +155,23 @@ function createSpreaderTable() {
     th.width = '16.6%';
     tr.appendChild(th);
 
-	th = document.createElement('th');
+    th = document.createElement('th');
     th.innerHTML = "Width (ft)";
     th.width = '16.6%';
     tr.appendChild(th);
-	
-	th = document.createElement('th');
+    
+    th = document.createElement('th');
     th.innerHTML = "Spreader Type";
     th.width = '16.6%';
     tr.appendChild(th);
     tbdy.appendChild(tr);
-	
-	/*th = document.createElement('th');
+    
+    /*th = document.createElement('th');
     th.innerHTML = "Delete";
     th.width = '16.6%';
     tr.appendChild(th);
     tbdy.appendChild(tr);
-	*/
+    */
 
     gHeaderCreated = true;
 
@@ -138,7 +179,7 @@ function createSpreaderTable() {
     spBody.appendChild(bTbl);
 
     $("#spTable").append($(bTbl));
-}	
+}   
 createSpreaderTable();
 
 function spreaderTableFunc (){
@@ -156,8 +197,8 @@ function spreaderTableFunc (){
 
 function appendTableRows(){ 
 if(retrievedSpreaders != null){
-	spreaders = retrievedSpreaders;
-	}
+    spreaders = retrievedSpreaders;
+    }
     var tableB = document.getElementById('spTable');
     for (var i = 0; i < spreaders.length; i++) {
      var row = tableB.insertRow(-1);
@@ -196,12 +237,10 @@ appendTableRows();
 
 function saveSpreader(){
 	var a  = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val() };
-	spreaders.push(a);
-    spreaderTableFunc();
-    spTableClickListener();
-	spreaderStored();
+
     // $( "#add-spreader" ).collapsible( "option", "collapsed", true );
 	if(retrievedSpreaders == null){
+		spreaders.push(a);
 		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(spreaders));
 		console.log(spreaders);
 	}else{  
@@ -209,14 +248,17 @@ function saveSpreader(){
 		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(retrievedSpreaders));
 		console.log('what it is.')
 	}	
+	 spreaderTableFunc();
+    spTableClickListener();
+	spreaderStored();
 }
 
 function clearSpText(){
-	$('#spName').val("");
-	$('#spCapacity').val("");
-	$('#spUnit').val("");
-	$('#spWidth').val("");
-	$('#spType').val("");
+    $('#spName').val("");
+    $('#spCapacity').val("");
+    $('#spUnit').val("");
+    $('#spWidth').val("");
+    $('#spType').val("");
     $('#unloadTime').val("");
 }
 
@@ -250,9 +292,8 @@ function spTableClickListener(){
                 }
                 $("#spreaderBtn").text(cur_spreader.name);
             console.log(spreaders[i]);
-			calculateSpeed();
             });
-			
+            
     }else{
          $('#spTable').find('tr').click(function(){
             $(this).siblings().removeClass("highlighted");
@@ -263,11 +304,11 @@ function spTableClickListener(){
                     cur_spreader = spreaders[i];
                     break;
                 }
-    			$("#spreaderBtn").text(cur_spreader.name);
+                $("#spreaderBtn").text(cur_spreader.name);
             console.log(spreaders[i]);
-			calculateSpeed(); 
         });
     }
+    calculateSpeed();
 }    
 
 /*Creates Source Table*/
@@ -342,9 +383,9 @@ function sourceTableFunc() {
 
 
 function appendSourceTableRows(){ 
-	if(retrievedSources !== null){
-	sources= retrievedSources;
-	}
+    if(retrievedSources !== null){
+    sources= retrievedSources;
+    }
     var tableB = document.getElementById('sourceTable');
     for (var i = 0; i < sources.length; i++) {
      var row = tableB.insertRow(-1);
@@ -378,7 +419,7 @@ function appendSourceTableRows(){
 
      tableB.children[0].appendChild(row);
     
-	}
+    }
 }
 appendSourceTableRows();
 
@@ -390,24 +431,37 @@ var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": 
 
 
 function startUnload(){
-    recordPath();
-    unloadingDiv()
-    getDateTime();
-    cur_record.cSpred = cur_spreader;
-    cur_record.cSource = cur_source;
-    cur_record.date = spreadDate;
-    cur_record.Time = spreadTime;
-    cur_record.field = cur_field;
-    cur_record.operator = cur_operator; 
-    cur_record.fillLevel = $("#spFill").val();
-	timerFunc();
+console.log(cur_field);
+console.log(cur_spreader);
+	if(cur_spreader == undefined){
+		alert('Please select a spreader');
+	}else if(JSON.stringify(cur_field).length == 2 ){
+		alert('Please select a field');
+	}else if(cur_source == undefined){
+		alert('Please select a source');
+	}else if(cur_operator == undefined){
+		alert('Please select an operator');
+	}else{	
+		recordPath();
+		unloadingDiv()
+		getDateTime();
+		cur_record.cSpred = cur_spreader;
+		cur_record.cSource = cur_source;
+		cur_record.date = spreadDate;
+		cur_record.Time = spreadTime;
+		cur_record.field = cur_field;
+		cur_record.operator = cur_operator; 
+		cur_record.fillLevel = $("#spFill").val();
+		timerFunc();
+	}
 }
-	
+    
 
 
 function loadComplete(){
-	postPath();
+    postPath();
     records.push(cur_record);
+	console.log(records);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
     lStorage();
@@ -420,20 +474,23 @@ function loadComplete(){
     numberLoadsFromSource();
     }
     recordTableFunc();
-	cur_record = {};
-	// appendSpreadsheet();
-	cur_path = [];
-	killPathTimer();
+    cur_record = {};
+    // appendSpreadsheet();
+    cur_path = [];
+    killPathTimer();
+    console.log(retrievedRecords);
+	console.log(fields);
+	console.log(retrievedFields); 
 }
 
 
 function sourceTableClickListener(){
-	if(retrievedRecords != undefined){
-		last_element = retrievedRecords[retrievedRecords.length - 1];
-		$('sourceTable, td').filter(function(){
+    if(retrievedRecords != undefined){
+        last_element = retrievedRecords[retrievedRecords.length - 1];
+        $('sourceTable, td').filter(function(){
         return $(this).text() == last_element.cSource.name;
-		}).parent('sourceTable, tr').toggleClass('highlighted');
-		var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+        }).parent('sourceTable, tr').toggleClass('highlighted');
+        var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
         for(i =0; i< sources.length; i++)
             if (sources[i].name === cur_source_name){
                 cur_source = sources[i];
@@ -463,7 +520,7 @@ function sourceTableClickListener(){
                 cur_source = sources[i];
                 break;
             }
-			$("#sourceBtn").text(cur_source.name);
+            $("#sourceBtn").text(cur_source.name);
     });
     }
 }
@@ -576,7 +633,7 @@ function createRecordTable() {
     tr.appendChild(th);
     tbdy.appendChild(tr);
     
-	th = document.createElement('th');
+    th = document.createElement('th');
      th.innerHTML = "Load Fill Level";
      th.width = '10%';
      tr.appendChild(th);
@@ -652,8 +709,8 @@ function appendRecordTableRows(){
      
 
      recordTab.children[0].appendChild(row);
-	 
-	 
+     
+     
     }
 }
 
@@ -721,13 +778,18 @@ function fieldsTableFunc() {
         createFieldsTable();
         appendFieldsTableRows();
     }
-}    
+}
 
-function appendFieldsTableRows(){ 
+function appendFieldsTableRows(){
+    if(retrievedFields != null){
+            fields = retrievedFields;
+            console.log(retrievedFields);
+        }
     var tableB = document.getElementById('fieldsTable');
     for (var i = 0; i < fields.length; i++) {
      var row = tableB.insertRow(-1);
      tableB.style.textAlign = 'center';
+     console.log(fields.length);
 
      var fieldName = row.insertCell(-1);
      fieldName.textAlign = 'center';
@@ -746,7 +808,8 @@ function appendFieldsTableRows(){
      fieldArea.appendChild(document.createTextNode(fields[i].area));
     
     tableB.children[0].appendChild(row);
-    }
+    
+    }   
 }
 appendFieldsTableRows();
 
@@ -756,6 +819,8 @@ $(document).ready(function(){
 
 
 function fieldTableClickListener(){
+if(retrievedFields != null){
+var fields = retrievedFields;
     if(retrievedRecords != undefined){
          last_element = retrievedRecords[retrievedRecords.length - 1];
             $('fieldsTable, td').filter(function(){
@@ -780,9 +845,8 @@ function fieldTableClickListener(){
                     }
                     $("#fieldBtn").text(cur_field.name);
                 });
-				calculateSpeed();
             }else{
-
+			
              $('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
@@ -794,10 +858,11 @@ function fieldTableClickListener(){
                         cur_field = fields[i];
                         break;
                     }
-        			$("#fieldBtn").text(cur_field.name);
-                calculateSpeed();     
-            });
+                    $("#fieldBtn").text(cur_field.name);   
+           });
+		} 
     }
+    calculateSpeed();  
 }
 
 // Counts number of loads spread on field
@@ -867,43 +932,41 @@ createOpTable();
 
 
 function saveOperator(){
-  
-  
-  // if(retrievedOp == null){
-    // window.localStorage.setItem('operators', JSON.stringify(operators));
-    // console.log("Saying it's null");   
-    // }else{  
-	// retrievedOp.pu
-    // window.localStorage.setItem('retrievedOp', JSON.stringify(retrievedOp));
-    // console.log("it exists");
-    // }
-
-if($("#opName").val().length ==''){
-	alert("Please enter operator's name");
-	}else{
- var opname = $("#opName").val();
- newOperator = opname;
- operators.push(newOperator);
- window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
- console.log(operators);
- operatorsTableFunc();
- $("#opName").val('');
- // $("#add_operator").trigger( "collapse");
- opTableClickListener(); 
-opStored(); 
-}
+	if($("#opName").val().length ==''){
+		alert("Please enter operator's name");
+    }else{
+	var opname = $("#opName").val();
+	newOperator = opname;
+	
+	if(retrievedOp == null){
+		operators.push(newOperator);
+		window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
+		console.log("Saying it's null");   
+    }else{  
+		retrievedOp.push(newOperator)
+		window.localStorage.setItem('retrievedOp', JSON.stringify(retrievedOp));
+		console.log("it exists");
+    }
+	
+	console.log(operators);
+	operatorsTableFunc();
+	$("#opName").val('');
+	// $("#add_operator").trigger( "collapse");
+	opTableClickListener(); 
+	opStored(); 
+	}
 }
 
 
 function cancelOperator(){
-	$("#opName").val("");
-	$("#add_operator").collapsible("collapse");
+    $("#opName").val("");
+    $("#add_operator").collapsible("collapse");
 }
 
 
 function appendOpTableRows(){ 
 if(retrievedOp !== null){
-	operators= retrievedOp;
+    operators= retrievedOp;
         
     } 
     var tableB = document.getElementById('operator_table');
@@ -953,7 +1016,7 @@ function opTableClickListener(){
                 }
                 $("#operatorBtn").text(cur_operator);
             });
-				calculateSpeed();
+                calculateSpeed();
     }else{      
      $('#operator_table').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
@@ -982,3 +1045,9 @@ function operatorsTableFunc() {
     }
 }    
 
+    // var coordinates = []; Saving this for later
+
+// for(var i = 0 ; i < polygonBounds.length ; i++)
+// {
+//     coordinates.push(polygonBounds.getAt(i).lat(), polygonBounds.getAt(i).lng());
+// } 
