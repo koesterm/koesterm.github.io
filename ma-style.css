@@ -6,7 +6,7 @@ background-color: #fafafa;
 
 #navigation{
 overflow: auto;
-height: 360px;
+height: 300px;
 padding: 10px;
 padding-bottom: 0px;
 margin-bottom: 0px;
@@ -141,10 +141,14 @@ padding-bottom: 0x;
 	width:100%;
 }
 #targetRate {
-	height: 150px;
+	height: 110px;
 	padding-bottom: 0px;
 	margin-top: 0px;
 	padding-top:0px;
+}
+
+#speedReturn{
+	margin-bottom: 0;
 }
 
 #rateRight {
@@ -158,8 +162,9 @@ padding-bottom: 0x;
 
 #rightRate{
 	width: 48%%;
-	height: 60%;
+	height: 50%;
 	margin-left: 10px;
+	margin-top: 7px;
 }
 #rateLeft {
 	float:left;
@@ -171,6 +176,21 @@ padding-bottom: 0x;
 	padding:0px;
 }
 
+#selectFill{
+	height:24% !important;
+	margin-bottom: 6%;
+}
+
+#loadsOnField{
+	height:20%;
+	padding-top: 10px;
+}
+
+#loadsRemoved{
+	height:20%;
+	padding-top: 10px;
+}
+
 #desiredRt{
 	width: 10%;
 	size: 10;
@@ -178,11 +198,20 @@ padding-bottom: 0x;
 	
 #operator {
 	width: 48%;
-	height: 60%;
+	height: 50%;
+	margin-top: 7px;
+}
+
+.speed{
+	margin-bottom:5px;
+}
+
+#spreadFillLevel{
+	margin-bottom: 0;
 }
 
 .custom-btn {
-	height: 14%; 
+	height: 13%; 
 	text-align: center; 
 	padding: 3px;
 	
@@ -218,17 +247,25 @@ overflow: auto;
 	width: 50%;
 	height: 100%;
 	padding-bottom: 0px;
-	margin-bottom: 0px;
 }
 #mainRight {
 overflow: auto;
 	float: right;
-	width: 40%;
-	height: 90%;
+	width: 39%;
+	height: 100%;
+	margin-right:1%;
 	}
+
+#notUnloading{
+	margin-bottom: 0;
+	padding:0;
+}
+
 .ui-select{
-	height: 30% !important;
+	height: 30% 
 	width: 100%;
+	margin:0;
+	padding:0;
 	}
 
  .selectorTable tr:hover {
@@ -241,3 +278,7 @@ overflow: auto;
     background-color: #33D633;
 	}
 
+#fillSelector{
+	margin-top:0;
+}
+ 
