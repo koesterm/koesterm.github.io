@@ -12,20 +12,20 @@ var polyline = [];
  thisOne = [];
 var retrievedFields = [];
 
- var samplePoly = new google.maps.Polygon({
-     paths: [
-     	new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
-    		new google.maps.LatLng(41.09892378442908 , -86.62221908569336),
-    		new google.maps.LatLng( 41.08449857758279 , -86.62213325500488),
-    		new google.maps.LatLng(41.08449857758279 , -86.6411018371582)],
- 	   	fillColor: 'green',
- 		strokeColor: 'yellow',
- 		strokeOpacity: 0.7,
- 		strokeWeight: 4,
- 		fillOpacity: 0.35,
- 		visible: true			
-});
- var fields = [{name :"Back 40", unit: "1000gal/ac", rate: "7", area: "9000" , polygon: samplePoly}];
+//  var samplePoly = new google.maps.Polygon({
+//      paths: [
+//      	new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
+//     		new google.maps.LatLng(41.09892378442908 , -86.62221908569336),
+//     		new google.maps.LatLng( 41.08449857758279 , -86.62213325500488),
+//     		new google.maps.LatLng(41.08449857758279 , -86.6411018371582)],
+//  	   	fillColor: 'green',
+//  		strokeColor: 'yellow',
+//  		strokeOpacity: 0.7,
+//  		strokeWeight: 4,
+//  		fillOpacity: 0.35,
+//  		visible: true			
+// });
+//  var fields = [{name :"Back 40", unit: "1000gal/ac", rate: "7", area: "9000" , polygon: samplePoly}];
 
 fields = [];
 
