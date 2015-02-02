@@ -43,14 +43,18 @@ $(document).bind('mobileinit',function(){
 				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operator List</a>
 			</div>
 			<div id="mainRight" style="text-align: center;">
+			<div id = 'selectFill'>
 			<label id="spreadFillLevel">Spreader Fill Level</label>
-				<select  id="spFill">
+				<div id=fillSelector>
+					<select  id="spFill">
 					<option value="">Fill Level</option>
 					<option value="100%" selected="100%">Full</option>
 					<option value="75%">3/4</option>
 					<option value="50%">1/2</option>
 					<option value="25%">1/4</option>
 				</select>
+				</div>
+			</div>
 			<div id="loadsOnField" style="text-align: center;" class="infoReturn">Loads on field<br>
 			<label id="numberLonF"></label></div>
 			<div id="loadsRemoved" style="text-align: center;" class="infoReturn">Loads removed<br>
@@ -62,11 +66,11 @@ $(document).bind('mobileinit',function(){
 			<h4>Target Rate</h4>
 			</div>
 			<div id="operator" style="float: left;" >
-				<h4>Current Speed</h4>
+				<label class= "speed">Current Speed</label>
 				<label id="cur_speed"></label>
 			</div>
-			<div id="rightRate"style="float: right;" >
-				<h4>Target Speed</h4>
+			<div id="rightRate"style="float: right;">
+				<label class="speed">Target Speed</label>
 				<label id="speedReturn"># (MPH)</label>
 			</div>
 		</div>
@@ -78,8 +82,6 @@ $(document).bind('mobileinit',function(){
 			<div class="ui-block-a"><input type="button" id="startStop" value="Pause" onclick="updateStatus()"  /></div>
 			<div class="ui-block-b"><input type="button" id="done" value="Load Complete" onclick="loadComplete(); startDiv();" data-theme="b" /></div>
 		</div>
-		</div>
-		<div data-role="footer" class="ui-footer" data-position="relative" >
 		</div>
 </div>
 	<!--Field List
@@ -99,7 +101,7 @@ $(document).bind('mobileinit',function(){
 		</div>
 		<div data-role="content">
 			<div id="fieldList">
-			<table id="fieldsTable" class="selectorTable"></table>
+			<table id="fieldsTable"></table>
 			</div>
 			<div data-role="content" class="ui-content">
 				<a href="#add_field" data-role="button" id="addNewField" data-transition="pop"> + Add a Field </a>
@@ -176,7 +178,7 @@ $(document).bind('mobileinit',function(){
 		</div>
 		<div data-role="content">
 		<div id="spreaders" data-scroll="true">
-		<table id="spTable" class="selectorTable"></table>
+		<table id="spTable"></table>
 		</div>
 		<div data-role="collapsible" id="add-spreader">
 			<h3>Add Spreader</h3>
@@ -225,7 +227,7 @@ $(document).bind('mobileinit',function(){
 			</div>
 		</div>
 		<div id="sourcelist">
-			<table id="sourceTable" class="selectorTable"></table>
+			<table id="sourceTable"></table>
 				
 		</div>
 		<div data-role="collapsible" id="add_source">
@@ -338,7 +340,7 @@ $(document).bind('mobileinit',function(){
 	</div>
 	<div data-role="content">
 		<div id="operatorList">
-			<table id="operator_table" class="selectorTable"></table>
+			<table id="operator_table"></table>
 		</div>
 		<div id="add_operator" data-role="collapsible">
 			<h3>Add Operator</h3>
@@ -370,8 +372,8 @@ $(document).bind('mobileinit',function(){
 				</ul>
 			</div>
 	</div>
-	<div data-role="content" id="recordDiv" style="overflow: auto">
-		<table id="recordTable" class="recTable">
+	<div data-role="content" id="recordDiv" style="overflow: auto" class ="rectable">
+		<table id="recordTable"></table>
 	</div>
 
 </div>
@@ -385,8 +387,6 @@ $(document).bind('mobileinit',function(){
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.21/angular.min.js"></script>
- 
 </html>
 
 
