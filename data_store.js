@@ -87,6 +87,11 @@ function spreaderStored(){
 }
 spreaderStored();
 
+
+$(document).ready(function(){
+fieldsStored();
+});
+
 function fieldsStored(){
     if(retrievedFields == null){
     window.localStorage.setItem('fields',JSON.stringify(fields));
