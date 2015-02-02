@@ -316,7 +316,9 @@ function addFieldMap(){
 			}
 			if(retrievedFields != null){
 				fields = retrievedFields;
-			}	
+			}
+			console.log(fields);
+			console.log(retrievedFields);
 			for(var i=0; i < fields.length; ++i){
 				var polyPath = [];
 				var vertices = google.maps.geometry.encoding.decodePath(fields[i].polygon);
