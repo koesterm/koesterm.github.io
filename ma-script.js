@@ -1,9 +1,6 @@
 
-//div change color with the press of Start/Stop button
-var STOP = 0;
-var START = 1;
-var  status =  STOP;
-var currentlyDrewField;
+var infowWindow;
+var polypoint = [];
 var polygons = [];
 var cur_field = {};
 var map;
@@ -13,24 +10,27 @@ var cur_path = [];
 var retrievedRecords = [];
 var polyline = [];
  thisOne = [];
- 
-var samplePoly = new google.maps.Polygon({
-    paths: [
-    	new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
-   		new google.maps.LatLng(41.09892378442908 , -86.62221908569336),
-   		new google.maps.LatLng( 41.08449857758279 , -86.62213325500488),
-   		new google.maps.LatLng(41.08449857758279 , -86.6411018371582)],
-	   	fillColor: 'green',
-		strokeColor: 'yellow',
-		strokeOpacity: 0.7,
-		strokeWeight: 4,
-		fillOpacity: 0.35,
-		visible: true			
-});
-fields = [{name :"Back 40", unit: "1000gal/ac", rate: "7", area: "9000" , polygon: samplePoly}];
+var retrievedFields = [];
 
+ var samplePoly = new google.maps.Polygon({
+     paths: [
+     	new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
+    		new google.maps.LatLng(41.09892378442908 , -86.62221908569336),
+    		new google.maps.LatLng( 41.08449857758279 , -86.62213325500488),
+    		new google.maps.LatLng(41.08449857758279 , -86.6411018371582)],
+ 	   	fillColor: 'green',
+ 		strokeColor: 'yellow',
+ 		strokeOpacity: 0.7,
+ 		strokeWeight: 4,
+ 		fillOpacity: 0.35,
+ 		visible: true			
+});
+ var fields = [{name :"Back 40", unit: "1000gal/ac", rate: "7", area: "9000" , polygon: samplePoly}];
+
+fields = [];
 
 function postPath(){
+console.log(google.maps.geometry.encoding.encodePath(cur_path));
 cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
 console.log(cur_record.path);
 console.log(cur_path);
@@ -43,17 +43,20 @@ document.getElementById("unloading").style.display = 'none';
 document.getElementById("notUnloading").style.display = 'block';
 //hideUnload.style.backgroundColor = '	#CC0000';
 }
+
 startDiv();
 function unloadingDiv(){
 document.getElementById("unloading").style.display = 'block';
 document.getElementById("notUnloading").style.display = 'none';
 //hideUnload.style.backgroundColor = '#009900';
 }
+
 startDiv();
 //Add back button to each header
 $(document).on("mobileinit", function() {
 	$.mobile.page.options.addBackBtn = true;
-	});
+});
+
 // Record Table Style Function
 	function altRows(recordTable){
 	if(document.getElementsByTagName){  
@@ -81,11 +84,11 @@ function recordPath() {
         function ( position) {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        	travelSpeed = position.coords.speed*2.2369;
-		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed +' (MPH)</strong>';
+		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>';
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 2500, // 2.5 seconds
+            maximumAge: 0, // 0.1 seconds
             enableHighAccuracy: true
  			 
         }
@@ -95,12 +98,12 @@ function recordPath() {
     window.setTimeout( function () {
            navigator.geolocation.clearWatch( geolocation ) 
         }, 
-        3000 //stop checking after 3.0 seconds
+        3500 //stop checking after 3.5 seconds
     );
 };
 
 function timerFunc(){
-pathTimer=setInterval(function () {myTimer()}, 10000);
+pathTimer=setInterval(function () {myTimer()}, 7000);//path timer calls record path every 7 seconds
 
 function myTimer() {
     recordPath();
@@ -132,58 +135,105 @@ function createMap(){
         var myOptions = {
             zoom: 16,
             center: cur_path[0],
-            mapTypeId: google.maps.MapTypeId.SATELLITE
-			};
+            mapTypeId: google.maps.MapTypeId.HYBRID
+		};
         var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
 		var latLngBounds = new google.maps.LatLngBounds();
 		if(retrievedRecords != null){
 			for(var i=0; i < retrievedRecords.length; i++){
-					decoded = retrievedRecords[i].path;
-					cur_path = google.maps.geometry.encoding.decodePath(decoded);
-					for(var j = 0; j < cur_path.length; j++) {
+				decoded = retrievedRecords[i].path;
+				cur_path = google.maps.geometry.encoding.decodePath(decoded);
+				for(var j = 0; j < cur_path.length; j++) {
 					latLngBounds.extend(cur_path[j]);
 					// Place the marker
-					// new google.maps.Marker({
-					// map: map,
-					// position: cur_path[j],
-					// title: "Point " + (j + 1)
-					// });
-					
+					var marker = new google.maps.Marker({
+					map: map,
+					position: cur_path[j],
+					title: "Point " + (j + 1)
+					});
+					marker.visible = false;
 				}
-			}
-			 var polyline = new google.maps.Polyline({
-            map: map,
-            path: cur_path,
-            strokeColor: '#0000FF',
-            strokeOpacity: 1.0,
-            strokeWeight: 4
-          });
+				var polyline = new google.maps.Polyline({
+				map: map,
+				path: cur_path,
+				strokeColor: '#0000FF',
+				strokeOpacity: 1.0,
+				strokeWeight: 4
+				});
+			}	 
 		}else{
-          for(var i = 0; i < cur_path.length; i++) {
-            latLngBounds.extend(cur_path[i]);
-            // Place the marker
-            new google.maps.Marker({
-              map: map,
-              position: cur_path[i],
-              title: "Point " + (i + 1)
-            });
-          }
-		  }
-          // Creates the polyline object
+			for(var i = 0; i < cur_path.length; i++) {
+				latLngBounds.extend(cur_path[i]);
+				// Place the marker
+				new google.maps.Marker({
+					map: map,
+					position: cur_path[i],
+					title: "Point " + (i + 1)
+				});
+				
+				 // Creates the polyline object
           var polyline = new google.maps.Polyline({
             map: map,
             path: cur_path,
             strokeColor: '#0000FF',
             strokeOpacity: 0.7,
             strokeWeight: 3
-          });
+			});
+			}
+		}
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
-	}	
-		for(var i=0; i < fields.length; ++i){
-			fields[i].polygon.setMap(map);
-     	}
-	}
+		if(fields = null){
+			return;
+		}else{
+			if(retrievedFields ==null){
+				return;
+			}
+			if(retrievedFields != null){
+				fields = retrievedFields;
+			}	
+			for(var i=0; i < fields.length; ++i){
+				var polyPath = [];
+				var vertices = google.maps.geometry.encoding.decodePath(fields[i].polygon);
+				for (var j =0; j < vertices.length; j++) {
+					lat = vertices[j].lat();
+					lng = vertices[j].lng();
+					point = new google.maps.LatLng(lat, lng);
+					polyPath.push(point)
+				}
+				polyPath.name = fields[i].name;
+				polyPath.area = fields[i].area;
+
+				samsPolygon = new google.maps.Polygon({
+					path: polyPath,
+					fillColor: 'green',
+					strokeColor: 'yellow',
+					strokeOpacity: 0.7,
+					strokeWeight: 4,
+					fillOpacity: 0.2,
+					visible: true,
+					editable: true	
+				});
+					var infoWindow = new google.maps.InfoWindow();
+				samsPolygon.set("name", polyPath.name);
+				samsPolygon.set("area", polyPath.area);
+				samsPolygon.setMap(map);
+				var currentMark;
+	 			google.maps.event.addListener(samsPolygon,'click', function(event) {
+	 				
+						infoWindow.setContent("<b> Field information </b><br>" + "Name :" + this.get("name") + "<br>" + "Area :" + this.get("area"));
+	   					infoWindow.setPosition(event.latLng);
+	   					infoWindow.open(map);
+	   					currentMark = infoWindow;	
+				});
+				google.maps.event.addListener(infoWindow,'closeclick',function(){
+   					currentMark.setMap(null); //removes the marker
+   					// then, remove the infowindows name from the array
+				});
+		    }
+		}
+	}			
+}
 	
 $( document ).on( "pageinit", "#add_field", function() {
 	addFieldMap();
@@ -209,9 +259,10 @@ function addFieldMap(){
         var myOptions = {
             zoom: 16,
             center: latlng,
-            mapTypeId: google.maps.MapTypeId.SATELLITE
+            mapTypeId: google.maps.MapTypeId.HYBRID
         };
-		var map = new google.maps.Map(document.getElementById("addFieldMap"), myOptions);
+	
+	var map = new google.maps.Map(document.getElementById("addFieldMap"), myOptions);
 		
         // Add an overlay to the map of current lat/lng
         var marker = new google.maps.Marker({
@@ -219,27 +270,31 @@ function addFieldMap(){
             map: map,
             title: "Greetings!"
         });
+		
 		google.maps.event.addListenerOnce(map, 'idle', function() {
 		google.maps.event.trigger(map, 'resize');
+		
 		});
 		map = new google.maps.Map($('#addFieldMap') [0], myOptions);
 		var dm = new google.maps.drawing.DrawingManager({
 			drawingMode: google.maps.drawing.OverlayType.POLYGON,
 			drawingControl: false,
 			map: map,
+			
 			polygonOptions: {
 			editable: true,
 			fillColor: 'green',
 			strokeColor: 'yellow',
 			strokeWeight: 4
 			}
+			
 		});
 		map.setTilt(0);
 		dm.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);	
 		google.maps.event.addListener(dm, 'polygoncomplete', function(polygon) {
 			dm.setDrawingMode(null);
-			cur_field = polygon;
-			
+			cur_field = polygon.getPath();
+			encodePGon = google.maps.geometry.encoding.encodePath(cur_field);
 			var fArea = google.maps.geometry.spherical.computeArea(polygon.getPath());
 
 			areaAc = fArea * 0.000247105;
@@ -249,14 +304,48 @@ function addFieldMap(){
 			});
 			function deleteMarkers () {
 			polygon.setPath([]);
+			addFieldMap();
 			}	
 		});
-		for(vari=0; i< records.length; ++I){
-			records[i].path.setMap(map);
+		
+		if(fields = null){
+			return;
+		}else{
+			if(retrievedFields ==null){
+				return;
 			}
-			
-		for(var i=0; i < fields.length; ++i){
-				fields[i].polygon.setMap(map);
+			if(retrievedFields != null){
+				fields = retrievedFields;
+			}	
+			for(var i=0; i < fields.length; ++i){
+				var polyPath = [];
+				var vertices = google.maps.geometry.encoding.decodePath(fields[i].polygon);
+				for (var j =0; j < vertices.length; j++) {
+					lat = vertices[j].lat();
+					lng = vertices[j].lng();
+					point = new google.maps.LatLng(lat, lng);
+					polyPath.push(point)
+				}
+		
+				samsPolygon = new google.maps.Polygon({
+				path: polyPath,
+				fillColor: 'green',
+				strokeColor: 'yellow',
+				strokeOpacity: 0.7,
+				strokeWeight: 4,
+				fillOpacity: 0.35,
+				visible: true	
+				});
+				samsPolygon.setMap(map);
+				google.maps.event.addListener(samsPolygon, 'click', showArrays);
+				infoWindow = new google.maps.InfoWindow();
+				function showArrays(event){
+					var contentString = '<b>Field Boundary</b><br>' +
+					'Clicked location: <br>' + event.field[i].name + '<br>';
+					//Replace the info window's content with field Name
+					infoWindow.setContent(contentString);
+				}	
+			}
 		}
 	}
 }
@@ -283,26 +372,6 @@ $('#saveField').click(function () {
     });
 
 	// Save Field name and Polygon to array 
-function saveField(){
-	var tIName = $("#fieldName").val();
-	for(var i = 0; i < fields.length; i++) {
-		if(fields[i].name == tIName) {
-			alert("Name Already Saved");
-			return true;			
-		}
-	}
-	
-	var field = {name: tIName, unit: "", rate: "", area: "" , polygon: cur_field}; 
-	field.unit = $("#rateUnit").val();
-	field.rate = $("#rateValue").val();
-	field.area = areaAcres;
-	
-	fields.push(field);
-	addFieldMap();
-	window.location.href = "#field-list";
-	fieldsTableFunc();
-	fieldTableClickListener();
-}
 
 function addFieldRerun(){
 	addFieldMap();
@@ -310,7 +379,8 @@ function addFieldRerun(){
 
 // Saves and pushes source information to array
 function saveSource(){
-	cur_source = { name: $("#sourceName").val(), nutrientUnit: $("#sourceUnit").val(), N:$("#nUnits").val(), P: $("#pUnits").val(), K: $("#kUnits").val()}; 
+	cur_source = { name: $("#sourceName").val(), nutrientUnit: $("#sourceUnit").val(), N:$("#nUnits").val(), P: $("#pUnits").val(), K: $("#kUnits").val()};
+	console.log(sources);
 	sources.push(cur_source);
 	console.log(retrievedSources);
 	sourceTableFunc();
