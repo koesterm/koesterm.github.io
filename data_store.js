@@ -117,11 +117,12 @@ function saveField(){
 	console.log(fields);
 	console.log(retrievedFields);
 	fieldsTableFunc();
-	fieldTableClickListener();
+	
 	addFieldMap();
 	fieldsStored(); 
-	field = {};
 	window.location.href = "#field-list";
+	fieldTableClickListener();
+	field = {};
 }
 
 
