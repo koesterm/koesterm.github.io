@@ -87,7 +87,6 @@ function spreaderStored(){
 }
 spreaderStored();
 
-
 $(document).ready(function(){
 fieldsStored();
 });
@@ -122,12 +121,11 @@ function saveField(){
 	console.log(fields);
 	console.log(retrievedFields);
 	fieldsTableFunc();
-	
+	fieldTableClickListener();
 	addFieldMap();
 	fieldsStored(); 
-	window.location.href = "#field-list";
-	fieldTableClickListener();
 	field = {};
+	window.location.href = "#field-list";
 }
 
 
@@ -284,7 +282,7 @@ function spTableClickListener(){
                     cur_spreader = spreaders[i];
                     break;
                 }
-                $("#spreaderBtn").text(cur_spreader.name);
+                $("#spreaderBtn").text("Spreader : " + cur_spreader.name);
             console.log(cur_spreader);
 
         $('#spTable').find('tr').click(function(){
@@ -459,6 +457,7 @@ console.log(cur_spreader);
 		cur_record.operator = cur_operator; 
 		cur_record.fillLevel = $("#spFill").val();
 		timerFunc();
+		overlay();
 	}
 }
     
@@ -487,6 +486,7 @@ function loadComplete(){
     console.log(retrievedRecords);
 	console.log(fields);
 	console.log(retrievedFields); 
+	overlay();
 }
 
 
@@ -502,7 +502,7 @@ function sourceTableClickListener(){
                 cur_source = sources[i];
                 break;
             }
-            $("#sourceBtn").text(cur_source.name);
+            
 
     $('#sourceTable').find('tr').click(function(){
         $(this).siblings().removeClass("highlighted");
@@ -520,15 +520,16 @@ function sourceTableClickListener(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
 
-        cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
-        for(i =0; i< sources.length; i++)
-            if (sources[i].name === cur_source_name){
-                cur_source = sources[i];
+		cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+			for(i =0; i< sources.length; i++){
+				if (sources[i].name === cur_source_name){
+					cur_source = sources[i];
                 break;
-            }
-            $("#sourceBtn").text(cur_source.name);
-    });
+				}
+			}
+		});
     }
+	$("#sourceBtn").text("Source : " +cur_source.name);
 }
 
 //counts the number of loads from source
@@ -838,8 +839,6 @@ var fields = retrievedFields;
                     cur_field = fields[i];
                     break;
                 }
-                $("#fieldBtn").text(cur_field.name);
-
             $('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
@@ -852,22 +851,21 @@ var fields = retrievedFields;
                     $("#fieldBtn").text(cur_field.name);
                 });
             }else{
-			
              $('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
-
                 cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
                 
-                for(i =0; i< fields.length; i++)
+                for(i =0; i< fields.length; i++){
                     if (fields[i].name === cur_field_name){
                         cur_field = fields[i];
                         break;
                     }
-                    $("#fieldBtn").text(cur_field.name);   
+				}
            });
 		} 
     }
+	$("#fieldBtn").text("Field : " + cur_field.name);  
     calculateSpeed();  
 }
 
@@ -1008,8 +1006,6 @@ function opTableClickListener(){
                     cur_operator = operators[i];
                     break;
                 }
-                
-                $("#operatorBtn").text(cur_operator);
 
         $('#operator_table').find('tr').click(function(){
             $(this).siblings().removeClass("highlighted");
@@ -1029,14 +1025,15 @@ function opTableClickListener(){
         $(this).toggleClass("highlighted");
 
         cur_op_name = $("#operator_table tr.highlighted td")[0].innerHTML;
-        for(i =0; i< operators.length; i++)
-            if (operators[i] === cur_op_name){
-                cur_operator = operators[i];
-                break;
-            }
-            $("#operatorBtn").text(cur_operator);  
+			for(i =0; i< operators.length; i++){
+				if (operators[i] === cur_op_name){
+					cur_operator = operators[i];
+					break;
+				}
+			}	  
         });
     }
+	 $("#operatorBtn").text("Operator : " +cur_operator);
 }    
 
 
