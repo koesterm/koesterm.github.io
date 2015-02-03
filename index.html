@@ -31,20 +31,29 @@ $(document).bind('mobileinit',function(){
 					<li><a href="#home" data-role="button">Dashboard</a></li>
 					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
 					<li><a href="#recordPage" data-role="button">Records</a></li>
-					<!-- <li><a href="#plan_page" data-role="button" onclick ="return downloadCSVFile()">Download CSV</a></li>  -->
 				</ul>
 			</div>
 		</div>
 		<div data-role="content" id="navigation">
 			<div id="mainLeft">
-				<a href="#spreader-list" id="spreaderBtn" data-role="button" data-transition="slide" class="custom-btn">Manure Spreaders</a>
-				<a href="#field-list" id="fieldBtn" data-role="button" data-transition="slide" class="custom-btn" >Field Lists </a>
-				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn">Source</a>
-				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn">Operator List</a>
+				<a href="#spreader-list" id="spreaderBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Manure Spreaders</a>
+				<a href="#field-list" id="fieldBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;" >Field Lists </a>
+				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Source</a>
+				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Operator List</a>
 			</div>
+			<div id="overlay">
+				<div id="spAnimation">
+					<h1>Spreading<h1>
+					<div id="facebookG" style="margin-left: 40%;">
+						<div id="blockG_1" class="facebook_blockG"></div>
+						<div id="blockG_2" class="facebook_blockG"></div>
+						<div id="blockG_3" class="facebook_blockG"></div>
+					</div>
+				</div>
+			</div>	
 			<div id="mainRight" style="text-align: center;">
 			<div id = 'selectFill'>
-			<label id="spreadFillLevel">Spreader Fill Level</label>
+			<label id="spreadFillLevel">Fill Level</label>
 				<div id=fillSelector>
 					<select  id="spFill">
 					<option value="">Fill Level</option>
@@ -64,6 +73,8 @@ $(document).bind('mobileinit',function(){
 		<div id="targetRate" style="text-align: center;">
 		<div data-role="header">
 			<h4>Target Rate</h4>
+		
+			
 			</div>
 			<div id="operator" style="float: left;" >
 				<label class= "speed">Current Speed</label>
@@ -367,7 +378,7 @@ $(document).bind('mobileinit',function(){
 				<ul>
 					<li><a href="#home" data-role="button">Dashboard</a></li>
 					<li><a href="#map-page" data-role="button" data-transition="slide">Map</a></li>
-					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<li><a id="csvDownLoad" data-role="button" onclick ="return parseCSV()">Download CSV</a></li>
 					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
 				</ul>
 			</div>
@@ -384,7 +395,7 @@ $(document).bind('mobileinit',function(){
 <script src="ma-script.js"></script>
 <script src="data_store.js"></script>
 <script src="local_store.js"></script>
-
+<script src="CSVcalc.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
 </html>
