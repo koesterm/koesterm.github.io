@@ -309,7 +309,7 @@ function spTableClickListener(){
                     break;
                 }
             }    
-            $("#spreaderBtn").text(cur_spreader.name);
+            $("#spreaderBtn").text("Spreader : " + cur_spreader.name);
             console.log(spreaders[i]);
         });
     }
