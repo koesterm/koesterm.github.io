@@ -527,8 +527,9 @@ function sourceTableClickListener(){
 					cur_source = sources[i];
                 break;
 				}
-				$("#sourceBtn").text("Source : " +cur_source.name);
+				
 			}
+			$("#sourceBtn").text("Source : " +cur_source.name);
 		});
     }
 	
