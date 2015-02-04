@@ -294,7 +294,7 @@ function spTableClickListener(){
                     cur_spreader = spreaders[i];
                     break;
                 }
-                $("#spreaderBtn").text(cur_spreader.name);
+                $("#spreaderBtn").text("Spreader : " + cur_spreader.name);
             console.log(spreaders[i]);
             });
             
@@ -502,6 +502,7 @@ function sourceTableClickListener(){
                 cur_source = sources[i];
                 break;
             }
+            $("#sourceBtn").text("Source : " +cur_source.name);
             
 
     $('#sourceTable').find('tr').click(function(){
@@ -513,7 +514,7 @@ function sourceTableClickListener(){
                 cur_source = sources[i];
                 break;
             }
-            $("#sourceBtn").text(cur_source.name);
+            $("#sourceBtn").text("Source : " + cur_source.name);
         });
     }else{
      $('#sourceTable').find('tr').click(function(){
@@ -526,10 +527,11 @@ function sourceTableClickListener(){
 					cur_source = sources[i];
                 break;
 				}
+				$("#sourceBtn").text("Source : " +cur_source.name);
 			}
 		});
     }
-	$("#sourceBtn").text("Source : " +cur_source.name);
+	
 }
 
 //counts the number of loads from source
@@ -839,6 +841,7 @@ var fields = retrievedFields;
                     cur_field = fields[i];
                     break;
                 }
+                
             $('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
@@ -848,7 +851,7 @@ var fields = retrievedFields;
                         cur_field = fields[i];
                         break;
                     }
-                    $("#fieldBtn").text(cur_field.name);
+                    $("#fieldBtn").text("Field : " + cur_field.name);
                 });
             }else{
              $('#fieldsTable').find('tr').click(function(){
@@ -861,11 +864,11 @@ var fields = retrievedFields;
                         cur_field = fields[i];
                         break;
                     }
+                    	$("#fieldBtn").text("Field : " + cur_field.name);
 				}
            });
 		} 
     }
-	$("#fieldBtn").text("Field : " + cur_field.name);  
     calculateSpeed();  
 }
 
@@ -1006,6 +1009,7 @@ function opTableClickListener(){
                     cur_operator = operators[i];
                     break;
                 }
+                $("#operatorBtn").text("Operator : " + cur_operator);
 
         $('#operator_table').find('tr').click(function(){
             $(this).siblings().removeClass("highlighted");
@@ -1016,7 +1020,7 @@ function opTableClickListener(){
                     cur_operator = operators[i];
                     break;
                 }
-                $("#operatorBtn").text(cur_operator);
+                $("#operatorBtn").text("Operator : " + cur_operator);
             });
                 calculateSpeed();
     }else{      
@@ -1030,10 +1034,11 @@ function opTableClickListener(){
 					cur_operator = operators[i];
 					break;
 				}
+				 $("#operatorBtn").text("Operator : " +cur_operator);
 			}	  
         });
     }
-	 $("#operatorBtn").text("Operator : " +cur_operator);
+	
 }    
 
 
