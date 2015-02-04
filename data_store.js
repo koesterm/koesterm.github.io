@@ -842,7 +842,7 @@ var fields = retrievedFields;
                     cur_field = fields[i];
                     break;
                 }
-                
+                $("#fieldBtn").text("Field : " + cur_field.name);
             $('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
@@ -865,8 +865,9 @@ var fields = retrievedFields;
                         cur_field = fields[i];
                         break;
                     }
-                    	$("#fieldBtn").text("Field : " + cur_field.name);
+                    	
 				}
+				$("#fieldBtn").text("Field : " + cur_field.name);
            });
 		} 
     }
