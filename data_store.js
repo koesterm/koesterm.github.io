@@ -303,12 +303,13 @@ function spTableClickListener(){
             $(this).siblings().removeClass("highlighted");
             $(this).toggleClass("highlighted");
            var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
-            for(i =0; i< spreaders.length; i++)
+            for(i =0; i< spreaders.length; i++){
                 if (spreaders[i].name === cur_spreader_name){
                     cur_spreader = spreaders[i];
                     break;
                 }
-                $("#spreaderBtn").text(cur_spreader.name);
+            }    
+            $("#spreaderBtn").text(cur_spreader.name);
             console.log(spreaders[i]);
         });
     }
