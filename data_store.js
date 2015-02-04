@@ -1036,8 +1036,9 @@ function opTableClickListener(){
 					cur_operator = operators[i];
 					break;
 				}
-				 $("#operatorBtn").text("Operator : " +cur_operator);
-			}	  
+				 
+			}
+			$("#operatorBtn").text("Operator : " +cur_operator);
         });
     }
 	
