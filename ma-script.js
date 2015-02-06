@@ -83,7 +83,7 @@ window.onload=function(){
 
 	
 function recordPath() {
-    myGeolocation = navigator.geolocation.watchPosition( 
+    var geolocation = navigator.geolocation.watchPosition( 
     	
         function ( position) {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
@@ -99,15 +99,15 @@ function recordPath() {
 
 	);
 	
-    //window.setTimeout( function () {
-    //       navigator.geolocation.clearWatch( geolocation ) 
-    //    }, 
-    //    3500 //stop checking after 3.5 seconds
-    //);
+    window.setTimeout( function () {
+           navigator.geolocation.clearWatch( geolocation ) 
+        }, 
+        9000 //stop checking after 9 seconds
+    );
 };
 
 function timerFunc(){
-pathTimer=setInterval(function () {myTimer()}, 7000);//path timer calls record path every 7 seconds
+pathTimer=setInterval(function () {myTimer()}, 10000);//path timer calls record path every 7 seconds
 
 function myTimer() {
     recordPath();
@@ -116,7 +116,6 @@ function myTimer() {
 
 function killPathTimer(){
 	clearInterval(pathTimer);
-	navigator.geolocation.clearWatch(myGeolocation); 
 }
 	
 
