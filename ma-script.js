@@ -82,7 +82,7 @@ window.onload=function(){
 
 	
 function recordPath() {
-    var geolocation = navigator.geolocation.watchPosition( 
+    geolocation = navigator.geolocation.watchPosition( 
     	
         function ( position) {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
