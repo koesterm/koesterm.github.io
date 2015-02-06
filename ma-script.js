@@ -98,11 +98,11 @@ function recordPath() {
 
 	);
 	
-    window.setTimeout( function () {
-           navigator.geolocation.clearWatch( geolocation ) 
-        }, 
-        3500 //stop checking after 3.5 seconds
-    );
+    //window.setTimeout( function () {
+    //       navigator.geolocation.clearWatch( geolocation ) 
+    //    }, 
+    //    3500 //stop checking after 3.5 seconds
+    //);
 };
 
 function timerFunc(){
@@ -115,6 +115,7 @@ function myTimer() {
 
 function killPathTimer(){
 	clearInterval(pathTimer);
+	navigator.geolocation.clearWatch( geolocation ); 
 }
 	
 
