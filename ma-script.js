@@ -115,6 +115,7 @@ function myTimer() {
 }
 
 function killPathTimer(){
+	clearInterval(pathTimer);
 	navigator.geolocation.clearWatch(myGeolocation); 
 }
 	
