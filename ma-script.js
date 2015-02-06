@@ -11,6 +11,7 @@ var retrievedRecords = [];
 var polyline = [];
  thisOne = [];
 var retrievedFields = [];
+var myGeolocation;
 
  // var samplePoly = new google.maps.Polygon({
      // paths: [
@@ -82,7 +83,7 @@ window.onload=function(){
 
 	
 function recordPath() {
-    geolocation = navigator.geolocation.watchPosition( 
+    myGeolocation = navigator.geolocation.watchPosition( 
     	
         function ( position) {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
@@ -114,8 +115,7 @@ function myTimer() {
 }
 
 function killPathTimer(){
-	clearInterval(pathTimer);
-	navigator.geolocation.clearWatch( geolocation ); 
+	navigator.geolocation.clearWatch(myGeolocation); 
 }
 	
 
