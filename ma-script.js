@@ -11,7 +11,7 @@ var retrievedRecords = [];
 var polyline = [];
  thisOne = [];
 var retrievedFields = [];
-var myGeolocation;
+
 
  // var samplePoly = new google.maps.Polygon({
      // paths: [
