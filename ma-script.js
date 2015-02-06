@@ -91,7 +91,7 @@ function recordPath() {
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 3500, // 3.5 seconds
+            maximumAge: 500, // .5 seconds
             enableHighAccuracy: true
  			 
         }
