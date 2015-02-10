@@ -11,6 +11,9 @@ var retrievedRecords = [];
 var polyline = [];
  thisOne = [];
 var retrievedFields = [];
+var STOP = 0;
+var START = 1;
+var  status =  STOP;
 
 
  // var samplePoly = new google.maps.Polygon({
@@ -49,6 +52,30 @@ document.getElementById("unloading").style.display = 'block';
 document.getElementById("notUnloading").style.display = 'none';
 //hideUnload.style.backgroundColor = '#009900';
 }
+
+function pauseLoad(){
+	if (status==STOP){
+		status = START; 
+	}else {
+		status =  STOP;
+	}
+updateStatus();
+console.log("hello")
+}
+
+function updateStatus(){
+	if(status == START){
+		$("#spStatus").text("Paused");
+		$("#startStop").text("Start");
+		$("#facebookG").hide();
+		killPathTimer();
+	}else{
+		$("#spStatus").text("Spreading");
+		$("#startStop").text("Pause");
+		$("#facebookG").show();
+		 recordPath();
+	}
+}	
 
 startDiv();
 //Add back button to each header
