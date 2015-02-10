@@ -88,6 +88,9 @@ function recordPath() {
         function ( position) {
 		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        	travelSpeed = position.coords.speed*2.2369;
+       		positionE = position.coords.accuracy;
+		console.log(positionE);
+		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>  '+ positionE.toFixed(2) + 'error meters';
 		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>';
 		console.log(travelSpeed);
         },
