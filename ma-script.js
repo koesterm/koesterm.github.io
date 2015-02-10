@@ -83,41 +83,32 @@ window.onload=function(){
 
 	
 function recordPath() {
-    var geolocation = navigator.geolocation.watchPosition( 
+    geoP = navigator.geolocation.watchPosition( 
     	
         function ( position) {
-		cur_path.push(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+		points = (new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        	travelSpeed = position.coords.speed*2.2369;
-       		positionE = position.coords.accuracy;
+		positionE = position.coords.accuracy;
 		console.log(positionE);
+		if(position.coords.accuracy < 10){
+			cur_path.push(points)
+		}
+		
 		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>  '+ positionE.toFixed(2) + 'error meters';
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
-            maximumAge: 1000, // 1 seconds
+            maximumAge: 1000, //  1 seconds
             enableHighAccuracy: true
  			 
-        }
+        });
 
-	);
-	
-    window.setTimeout( function () {
-           navigator.geolocation.clearWatch( geolocation ) 
-        }, 
-        9000 //stop checking after 9 seconds
-    );
 };
 
-function timerFunc(){
-pathTimer=setInterval(function () {myTimer()}, 10000);//path timer calls record path every 7 seconds
 
-function myTimer() {
-    recordPath();
-}
-}
 
 function killPathTimer(){
-	clearInterval(pathTimer);
+navigator.geolocation.clearWatch(geoP);
 }
 	
 
