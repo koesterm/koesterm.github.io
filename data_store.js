@@ -457,7 +457,6 @@ console.log(cur_spreader);
 		cur_record.field = cur_field;
 		cur_record.operator = cur_operator; 
 		cur_record.fillLevel = $("#spFill").val();
-		timerFunc();
 		overlay();
 	}
 }
