@@ -91,7 +91,6 @@ function recordPath() {
        		positionE = position.coords.accuracy;
 		console.log(positionE);
 		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>  '+ positionE.toFixed(2) + 'error meters';
-		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>';
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
