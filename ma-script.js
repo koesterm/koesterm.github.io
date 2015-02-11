@@ -117,7 +117,7 @@ function recordPath() {
        	travelSpeed = position.coords.speed*2.2369;
 		positionE = position.coords.accuracy;
 		console.log(positionE);
-		if(position.coords.accuracy < 10){
+		if(position.coords.accuracy < 9){
 			cur_path.push(points)
 		}
 		
@@ -182,7 +182,7 @@ function createMap(){
 				path: cur_path,
 				strokeColor: '#0000FF',
 				strokeOpacity: 1.0,
-				strokeWeight: 15
+				strokeWeight: 8
 				});
 			}	 
 		}else{
@@ -201,7 +201,7 @@ function createMap(){
             path: cur_path,
             strokeColor: '#0000FF',
             strokeOpacity: 0.7,
-            strokeWeight: 15
+            strokeWeight: 8
 			});
 			}
 		}
