@@ -8,6 +8,7 @@ var cur_source;
 var cur_spreader;
 var cur_record;
 var tableRecord = [];
+var polyLength;
 var spreadRate;
 var spreaders = [       
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
@@ -485,12 +486,11 @@ function loadComplete(){
     cur_record = {};
     // appendSpreadsheet();
     killPathTimer();
+	createMap();
     console.log(retrievedRecords);
 	console.log(fields);
 	console.log(retrievedFields); 
 	overlay();
-	createMap();
-	calculateRate();
 	cur_path = [];
 }
 
