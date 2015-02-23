@@ -120,7 +120,7 @@ function recordPath() {
        	travelSpeed = position.coords.speed*2.2369;
 		positionE = position.coords.accuracy;
 		console.log(positionE);
-		if(position.coords.accuracy < 10){
+		if(position.coords.accuracy < 20){
 			cur_path.push(points)
 		}
 		
