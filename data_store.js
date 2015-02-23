@@ -489,6 +489,7 @@ function loadComplete(){
 	console.log(retrievedFields); 
 	overlay();
 	createMap();
+	calculateRate();
 }
 
 
@@ -646,6 +647,12 @@ function createRecordTable() {
     tbdy.appendChild(tr);
     
     th = document.createElement('th');
+     th.innerHTML = "Rate";
+     th.width = '10%';
+     tr.appendChild(th);
+    tbdy.appendChild(tr);
+	
+	 th = document.createElement('th');
      th.innerHTML = "Load Fill Level";
      th.width = '10%';
      tr.appendChild(th);
@@ -716,6 +723,10 @@ function appendRecordTableRows(){
      recordAmount.appendChild(document.createTextNode(aName[i].cSpred.capacity+"("+ aName[i].cSpred.unit +")" ));
      
      var SpreaderFillLevel = row.insertCell(-1);
+     SpreaderFillLevel.textAlign = 'center';
+     SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
+	 
+	 var SpreaderFillLevel = row.insertCell(-1);
      SpreaderFillLevel.textAlign = 'center';
      SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
      
