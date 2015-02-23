@@ -482,14 +482,14 @@ function loadComplete(){
     recordTableFunc();
     cur_record = {};
     // appendSpreadsheet();
-    cur_path = [];
     killPathTimer();
+	cur_path = [];
     console.log(retrievedRecords);
 	console.log(fields);
 	console.log(retrievedFields); 
 	overlay();
 	createMap();
-	calculateRate();
+	// calculateRate();
 }
 
 
