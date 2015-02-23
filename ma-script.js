@@ -80,8 +80,6 @@ function updateStatus(){
 	}
 }	
 
-
-startDiv();
 //Add back button to each header
 $(document).on("mobileinit", function() {
 	$.mobile.page.options.addBackBtn = true;
@@ -95,10 +93,8 @@ function overlay() {
 // Record Table Style Function
 	function altRows(recordTable){
 	if(document.getElementsByTagName){  
-		
 		var table = document.getElementById('recordTable');  
 		var rows = table.getElementsByTagName("tr"); 
-		 
 		for(i = 0; i < rows.length; i++){          
 			if(i % 2 == 0){
 				rows[i].className = "evenrowcolor";
@@ -108,6 +104,7 @@ function overlay() {
 		}
 	}
 }
+
 window.onload=function(){
 	altRows('recordTable');
 }
@@ -115,7 +112,6 @@ window.onload=function(){
 	
 function recordPath() {
     geoP = navigator.geolocation.watchPosition( 
-    	
         function ( position) {
 		points = (new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
        	travelSpeed = position.coords.speed*2.2369;
@@ -136,27 +132,13 @@ function recordPath() {
 
 	);
 	
-    // window.setTimeout( function () {
-           // navigator.geolocation.clearWatch( geolocation ) 
-        // }, 
-        // 9000 //stop checking after 9seconds
-    // );
 };
-
-// function timerFunc(){
-	// pathTimer=setInterval(function () {myTimer()}, 10000);//path timer calls record path every 7 seconds
-
-	// function myTimer() {
-		// recordPath();
-	// }	
-// }
 
 function killPathTimer(){
 navigator.geolocation.clearWatch(geoP);
 	// clearInterval(pathTimer);
 }
 	
-
 	//Map
 function createMap(){
     var defaultLatLng = new google.maps.LatLng(40.4240,-86.9290);  // Default to Purdue Universitywhen no geolocation support
@@ -184,44 +166,46 @@ function createMap(){
 		if(retrievedRecords != null){
 			for(var i=0; i < retrievedRecords.length; i++){
 				decoded = retrievedRecords[i].path;
-				cur_path = google.maps.geometry.encoding.decodePath(decoded);
-				for(var j = 0; j < cur_path.length; j++) {
-					latLngBounds.extend(cur_path[j]);
+				newPolyline = google.maps.geometry.encoding.decodePath(decoded);
+				for(var j = 0; j < newPolyline.length; j++) {
+					latLngBounds.extend(newPolyline[j]);
 					// Place the marker
 					var marker = new google.maps.Marker({
 					map: map,
-					position: cur_path[j],
+					position: newPolyline[j],
 					title: "Point " + (j + 1)
 					});
 					marker.visible = false;
 				}
 				var polyline = new google.maps.Polyline({
 				map: map,
-				path: cur_path,
+				path: newPolyline,
 				strokeColor: '#0000FF',
 				strokeOpacity: 1.0,
 				strokeWeight: 10
 				});
 			}
-			google.maps.LatLng.prototype.kmTo = function(a){ 
-				var e = Math, ra = e.PI/180; 
-				var b = cur_path.lat() * ra, c = a.lat() * ra, d = b - c; 
-				var g = cur_path.lng() * ra - a.lng() * ra; 
-				var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
-				(c) * e.pow(e.sin(g/2), 2))); 
-				return f * 6378.137; 
-			}
-			google.maps.Polyline.prototype.inKm = function(n){ 
-				var a = this.getPath(n), len = a.getLength(), dist = 0; 
-				for (var i=0; i < len-1; i++) { 
-				dist += a.getAt(i).kmTo(a.getAt(i+1)); 
-			}
-			return dist; 
-			}
-			length_in_km =  polyline.inKm();
-			length_in_ft = length_in_km*3280.84;
-			// document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
-			console.log(length_in_ft); 
+			polylineLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
+				alert(polylineLength);
+			// google.maps.LatLng.prototype.kmTo = function(a){ 
+				// var e = Math, ra = e.PI/180; 
+				// var b = cur_path.lat() * ra, c = a.lat() * ra, d = b - c; 
+				// var g = cur_path.lng() * ra - a.lng() * ra; 
+				// var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+				// (c) * e.pow(e.sin(g/2), 2))); 
+				// return f * 6378.137; 
+			// }
+			// google.maps.Polyline.prototype.inKm = function(n){ 
+				// var a = this.getPath(n), len = a.getLength(), dist = 0; 
+				// for (var i=0; i < len-1; i++) { 
+				// dist += a.getAt(i).kmTo(a.getAt(i+1)); 
+			// }
+			// return dist; 
+			// }
+			// length_in_km =  polyline.inKm();
+			// length_in_ft = length_in_km*3280.84;
+			//document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
+			// console.log(length_in_ft); 
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -530,21 +514,21 @@ function saveSource(){
 			
 	}
 	
-function calculateRate(){
-		if(length_in_ft == undefined){
-			length_in_ft = 0;
-			}
-			var spreadWidth = cur_spreader.width;
-			alert(spreadWidth + "spreadwidth");
-			var spreadLength = length_in_ft;
-			alert(length_in_ft +"spreadlength");
-			var spreadArea = spreadWidth*spreadLength;
-			var spreadArAc = spreadArea/43560;
-			alert(spreadArAc + "spreadarea");
-			var spreadRate = cur_spreader.capacity/spreadArea;
-			alert(spreadRate + "spreadrate");
+	// function calculateRate(){
+		// if(length_in_ft == undefined){
+			// length_in_ft = 0;
+			// }
+			// var spreadWidth = cur_spreader.width;
+			// alert(spreadWidth + "spreadwidth");
+			// var spreadLength = length_in_ft;
+			// alert(length_in_ft +"spreadlength");
+			// var spreadArea = spreadWidth*spreadLength;
+			// var spreadArAc = spreadArea/43560;
+			// alert(spreadArAc + "spreadarea");
+			// var spreadRate = cur_spreader.capacity/spreadArea;
+			// alert(spreadRate + "spreadrate");
 		
-			alert("No Spread Path")
+			// alert("No Spread Path")
 		
-	}
+	// }
 
