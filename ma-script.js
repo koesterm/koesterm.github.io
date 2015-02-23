@@ -221,7 +221,7 @@ function createMap(){
 			length_in_km =  polyline.inKm();
 			length_in_ft = length_in_km*3280.84;
 			// document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
-			alert(length_in_ft); 
+			console.log(length_in_ft); 
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -532,11 +532,13 @@ function saveSource(){
 	
 	function calculateRate(){
 		console.log(cur_spreader);
-		loadArea = (cur_spreader.width * length_in_ft)/ 43560;
 		if(length_in_ft > 0){
-		loadRate = cur_spreader.capacity/ loadArea;
-		alert(loadRate);
+			loadArea = (cur_spreader.width * length_in_ft)/ 43560;
+			alert(loadArea);
+			loadRate = cur_spreader.capacity/ loadArea;
+			alert(loadRate);
+		}else{
+			alert("No Spread Path")
 		}
-		
 	}
 
