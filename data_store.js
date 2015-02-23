@@ -434,7 +434,7 @@ $(document).ready(function(){
    sourceTableClickListener();
 });
 
-var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "rate": "", "fillLevel": ""}
+cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "rate": "", "fillLevel": ""}
 
 
 function startUnload(){
@@ -458,7 +458,6 @@ console.log(cur_spreader);
 		cur_record.Time = spreadTime;
 		cur_record.field = cur_field;
 		cur_record.operator = cur_operator; 
-		cur_record.rate = spreadRate;
 		cur_record.fillLevel = $("#spFill").val();
 	
 		// timerFunc();
@@ -472,6 +471,7 @@ function loadComplete(){
 	killPathTimer();
     postPath();
 	createMap();
+	cur_record.rate = spreadRate;
     records.push(cur_record);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
@@ -723,13 +723,12 @@ function appendRecordTableRows(){
      
      var loadRate = row.insertCell(-1);
      loadRate.textAlign = 'center';
-     loadRate.appendChild(document.createTextNode(aName[i].spreadRate));
+     loadRate.appendChild(document.createTextNode(aName[i].rate));
 	 
 	 var SpreaderFillLevel = row.insertCell(-1);
      SpreaderFillLevel.textAlign = 'center';
      SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
      
-
      recordTab.children[0].appendChild(row);
      
      
