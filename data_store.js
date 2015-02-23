@@ -8,6 +8,7 @@ var cur_source;
 var cur_spreader;
 var cur_record;
 var tableRecord = [];
+var spreadRate;
 var spreaders = [       
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
@@ -457,6 +458,7 @@ console.log(cur_spreader);
 		cur_record.field = cur_field;
 		cur_record.operator = cur_operator; 
 		cur_record.fillLevel = $("#spFill").val();
+		cur_record.rate = spreadRate;
 		// timerFunc();
 		overlay();
 	}
@@ -483,13 +485,13 @@ function loadComplete(){
     cur_record = {};
     // appendSpreadsheet();
     killPathTimer();
-	cur_path = [];
     console.log(retrievedRecords);
 	console.log(fields);
 	console.log(retrievedFields); 
 	overlay();
 	createMap();
-	// calculateRate();
+	calculateRate();
+	cur_path = [];
 }
 
 
@@ -722,9 +724,9 @@ function appendRecordTableRows(){
      recordAmount.textAlign = 'center';
      recordAmount.appendChild(document.createTextNode(aName[i].cSpred.capacity+"("+ aName[i].cSpred.unit +")" ));
      
-     var SpreaderFillLevel = row.insertCell(-1);
-     SpreaderFillLevel.textAlign = 'center';
-     SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
+     var loadRate = row.insertCell(-1);
+     loadRate.textAlign = 'center';
+     loadRate.appendChild(document.createTextNode(aName[i].spreadRate));
 	 
 	 var SpreaderFillLevel = row.insertCell(-1);
      SpreaderFillLevel.textAlign = 'center';
