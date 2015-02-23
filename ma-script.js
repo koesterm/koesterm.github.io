@@ -11,10 +11,11 @@ var retrievedRecords = [];
 var polyline = [];
  thisOne = [];
 var retrievedFields = [];
+var myGeolocation;
+var length_in_km;
 var STOP = 0;
 var START = 1;
 var  status =  STOP;
-
 
  // var samplePoly = new google.maps.Polygon({
      // paths: [
@@ -53,6 +54,7 @@ document.getElementById("notUnloading").style.display = 'none';
 //hideUnload.style.backgroundColor = '#009900';
 }
 
+
 function pauseLoad(){
 	if (status==STOP){
 		status = START; 
@@ -76,6 +78,7 @@ function updateStatus(){
 		 recordPath();
 	}
 }	
+
 
 startDiv();
 //Add back button to each header
@@ -117,25 +120,39 @@ function recordPath() {
        	travelSpeed = position.coords.speed*2.2369;
 		positionE = position.coords.accuracy;
 		console.log(positionE);
-		if(position.coords.accuracy < 9){
+		if(position.coords.accuracy < 10){
 			cur_path.push(points)
 		}
 		
-		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>  '+ positionE.toFixed(2) + 'error meters';
+		document.getElementById('cur_speed').innerHTML = '<strong>'+travelSpeed.toFixed(2) +' (MPH)</strong>  '+ positionE.toFixed(2) + 'error meters'  ;
 		console.log(travelSpeed);
         },
         function () { /*error*/ }, {
             maximumAge: 1000, //  1 seconds
             enableHighAccuracy: true
  			 
-        });
+        }
 
+	);
+	
+    // window.setTimeout( function () {
+           // navigator.geolocation.clearWatch( geolocation ) 
+        // }, 
+        // 9000 //stop checking after 9seconds
+    // );
 };
 
+// function timerFunc(){
+	// pathTimer=setInterval(function () {myTimer()}, 10000);//path timer calls record path every 7 seconds
 
+	// function myTimer() {
+		// recordPath();
+	// }	
+// }
 
 function killPathTimer(){
 navigator.geolocation.clearWatch(geoP);
+	// clearInterval(pathTimer);
 }
 	
 
@@ -158,7 +175,7 @@ function createMap(){
     function drawMap() {
         var myOptions = {
             zoom: 16,
-            center: cur_path[0],
+            center: cur_path[i],
             mapTypeId: google.maps.MapTypeId.HYBRID
 		};
         var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
@@ -182,9 +199,27 @@ function createMap(){
 				path: cur_path,
 				strokeColor: '#0000FF',
 				strokeOpacity: 1.0,
-				strokeWeight: 8
+				strokeWeight: 10
 				});
-			}	 
+				google.maps.LatLng.prototype.kmTo = function(a){ 
+					var e = Math, ra = e.PI/180; 
+					var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+					var g = this.lng() * ra - a.lng() * ra; 
+					var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+					(c) * e.pow(e.sin(g/2), 2))); 
+					return f * 6378.137; 
+				}
+			}	
+			google.maps.Polyline.prototype.inKm = function(n){ 
+				var a = this.getPath(n), len = a.getLength(), dist = 0; 
+				for (var i=0; i < len-1; i++) { 
+				dist += a.getAt(i).kmTo(a.getAt(i+1)); 
+				}
+			return dist; 
+			}
+			length_in_km =  polyline.inKm();
+			// document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
+			alert(length_in_km); 
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -201,7 +236,7 @@ function createMap(){
             path: cur_path,
             strokeColor: '#0000FF',
             strokeOpacity: 0.7,
-            strokeWeight: 8
+            strokeWeight: 10
 			});
 			}
 		}
