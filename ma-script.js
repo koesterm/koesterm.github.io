@@ -17,6 +17,7 @@ var length_in_ft;
 var STOP = 0;
 var START = 1;
 var  status =  STOP;
+var polyLength;
 
  // var samplePoly = new google.maps.Polygon({
      // paths: [
@@ -206,8 +207,17 @@ function createMap(){
 			});
 			}
 		}
-		polylineLength = google.maps.geometry.spherical.computeLength(newPolyline.getPath().getArray());
-			alert(polylineLength);
+		var polyLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
+		console.log(polyLength);
+		spreadWidth = cur_spreader.width;
+		console.log(cur_spreader.width);
+		spreadLength = polyLength;
+		alert(polyLength +"spreadlength");
+		spreadArea = spreadWidth*spreadLength;
+		spreadArAc = spreadArea/43560;
+		alert(spreadArAc + "Spread area in acres");
+		spreadRate = cur_spreader.capacity/spreadArea;
+		alert(spreadRate + "spreadrate" + cur_spreader.unit);
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
 		if(fields = null){
@@ -496,16 +506,6 @@ function saveSource(){
 			
 	}
 	
-	function calculateRate(){
-		spreadWidth = cur_spreader.width;
-		console.log(polylineLength);
-		spreadLength = polylineLength;
-		alert(polylineLength +"spreadlength");
-		spreadArea = spreadWidth*spreadLength;
-		spreadArAc = spreadArea/43560;
-		alert(spreadArAc + "Spread area in acres");
-		spreadRate = cur_spreader.capacity/spreadArea;
-		alert(spreadRate + "spreadrate" + cur_spreader.unit);
-		
-	}
+
+	
 
