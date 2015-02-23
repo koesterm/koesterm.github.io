@@ -205,8 +205,8 @@ function createMap(){
 			}
 			google.maps.LatLng.prototype.kmTo = function(a){ 
 				var e = Math, ra = e.PI/180; 
-				var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
-				var g = this.lng() * ra - a.lng() * ra; 
+				var b = cur_path.lat() * ra, c = a.lat() * ra, d = b - c; 
+				var g = cur_path.lng() * ra - a.lng() * ra; 
 				var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
 				(c) * e.pow(e.sin(g/2), 2))); 
 				return f * 6378.137; 
