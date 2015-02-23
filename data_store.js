@@ -434,7 +434,7 @@ $(document).ready(function(){
    sourceTableClickListener();
 });
 
-var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "fillLevel": ""}
+var cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "rate": "", "fillLevel": ""}
 
 
 function startUnload(){
@@ -458,8 +458,9 @@ console.log(cur_spreader);
 		cur_record.Time = spreadTime;
 		cur_record.field = cur_field;
 		cur_record.operator = cur_operator; 
-		cur_record.fillLevel = $("#spFill").val();
 		cur_record.rate = spreadRate;
+		cur_record.fillLevel = $("#spFill").val();
+	
 		// timerFunc();
 		overlay();
 	}
@@ -468,9 +469,10 @@ console.log(cur_spreader);
 
 
 function loadComplete(){
+	killPathTimer();
     postPath();
+	createMap();
     records.push(cur_record);
-	console.log(records);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
     lStorage();
@@ -485,11 +487,6 @@ function loadComplete(){
     recordTableFunc();
     cur_record = {};
     // appendSpreadsheet();
-    killPathTimer();
-	createMap();
-    console.log(retrievedRecords);
-	console.log(fields);
-	console.log(retrievedFields); 
 	overlay();
 	cur_path = [];
 }
