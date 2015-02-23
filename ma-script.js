@@ -13,6 +13,7 @@ var polyline = [];
 var retrievedFields = [];
 var myGeolocation;
 var length_in_km;
+var length_in_ft;
 var STOP = 0;
 var START = 1;
 var  status =  STOP;
@@ -218,8 +219,9 @@ function createMap(){
 			return dist; 
 			}
 			length_in_km =  polyline.inKm();
+			length_in_ft = length_in_km*3280.84;
 			// document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
-			alert(length_in_km); 
+			alert(length_in_ft); 
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -495,7 +497,6 @@ function saveSource(){
   }
   
   function calculateSpeed(){
-  
 			var  rtSelect = cur_field.unit;
 				if(rtSelect =='gal/ac'){
 				var rate =  cur_field.rate;
@@ -527,5 +528,15 @@ function saveSource(){
 			document.getElementById('speedReturn').innerHTML ='<strong>'+s.toFixed(1) +' (MPH)</strong>';
 			}
 			
+	}
+	
+	function calculateRate(){
+		console.log(cur_spreader);
+		loadArea = (cur_spreader.width * length_in_ft)/ 43560;
+		if(length_in_ft > 0){
+		loadRate = cur_spreader.capacity/ loadArea;
+		alert(loadRate);
+		}
+		
 	}
 
