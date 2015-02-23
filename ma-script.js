@@ -530,7 +530,7 @@ function saveSource(){
 			
 	}
 	
-	function calculateRate(){
+function calculateRate(){
 		if(length_in_ft == undefined){
 			length_in_ft = 0;
 			}
@@ -539,7 +539,8 @@ function saveSource(){
 			var spreadLength = length_in_ft;
 			alert(length_in_ft +"spreadlength");
 			var spreadArea = spreadWidth*spreadLength;
-			alert(spreadArea + "spreadarea");
+			var spreadArAc = spreadArea/43560;
+			alert(spreadArAc + "spreadarea");
 			var spreadRate = cur_spreader.capacity/spreadArea;
 			alert(spreadRate + "spreadrate");
 		
