@@ -36,8 +36,11 @@ var  status =  STOP;
 fields = [];
 
 function postPath(){
-cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
-console.log(google.maps.geometry.encoding.decodePath(cur_record.path));
+	cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
+	getPolyLength = google.maps.geometry.encoding.decodePath(cur_path);
+	console.log(getPolyLength)
+	polylineLength = google.maps.geometry.spherical.computeLength(getPolyLength.getPath().getArray());
+	alert(polylineLength);
 }
 
 
@@ -185,27 +188,7 @@ function createMap(){
 				strokeWeight: 10
 				});
 			}
-			polylineLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
-				alert(polylineLength);
-			// google.maps.LatLng.prototype.kmTo = function(a){ 
-				// var e = Math, ra = e.PI/180; 
-				// var b = cur_path.lat() * ra, c = a.lat() * ra, d = b - c; 
-				// var g = cur_path.lng() * ra - a.lng() * ra; 
-				// var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
-				// (c) * e.pow(e.sin(g/2), 2))); 
-				// return f * 6378.137; 
-			// }
-			// google.maps.Polyline.prototype.inKm = function(n){ 
-				// var a = this.getPath(n), len = a.getLength(), dist = 0; 
-				// for (var i=0; i < len-1; i++) { 
-				// dist += a.getAt(i).kmTo(a.getAt(i+1)); 
-			// }
-			// return dist; 
-			// }
-			// length_in_km =  polyline.inKm();
-			// length_in_ft = length_in_km*3280.84;
-			//document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>' + length_in_km ;
-			// console.log(length_in_ft); 
+			
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -514,21 +497,16 @@ function saveSource(){
 			
 	}
 	
-	// function calculateRate(){
-		// if(length_in_ft == undefined){
-			// length_in_ft = 0;
-			// }
-			// var spreadWidth = cur_spreader.width;
-			// alert(spreadWidth + "spreadwidth");
-			// var spreadLength = length_in_ft;
-			// alert(length_in_ft +"spreadlength");
-			// var spreadArea = spreadWidth*spreadLength;
-			// var spreadArAc = spreadArea/43560;
-			// alert(spreadArAc + "spreadarea");
-			// var spreadRate = cur_spreader.capacity/spreadArea;
-			// alert(spreadRate + "spreadrate");
+	function calculateRate(){
+		spreadWidth = cur_spreader.width;
+		console.log(polylineLength);
+		spreadLength = polylineLength;
+		alert(polylineLength +"spreadlength");
+		spreadArea = spreadWidth*spreadLength;
+		spreadArAc = spreadArea/43560;
+		alert(spreadArAc + "Spread area in acres");
+		spreadRate = cur_spreader.capacity/spreadArea;
+		alert(spreadRate + "spreadrate" + cur_spreader.unit);
 		
-			// alert("No Spread Path")
-		
-	// }
+	}
 
