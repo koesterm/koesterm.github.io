@@ -457,6 +457,7 @@ console.log(cur_spreader);
 		cur_record.field = cur_field;
 		cur_record.operator = cur_operator; 
 		cur_record.fillLevel = $("#spFill").val();
+		// timerFunc();
 		overlay();
 	}
 }
@@ -487,6 +488,7 @@ function loadComplete(){
 	console.log(fields);
 	console.log(retrievedFields); 
 	overlay();
+	createMap();
 }
 
 
@@ -837,21 +839,24 @@ var fields = retrievedFields;
             return $(this).text() == last_element.field.name;
             }).parent('fieldsTable, tr').toggleClass('highlighted');
             var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
-                for(i =0; i< fields.length; i++)
-                if (fields[i].name === cur_field_name){
-                    cur_field = fields[i];
-                    break;
-                }
-                $("#fieldBtn").text("Field : " + cur_field.name);
-            $('#fieldsTable').find('tr').click(function(){
+                for(i =0; i< fields.length; i++){
+					if (fields[i].name === cur_field_name){
+						cur_field = fields[i];
+						break;
+					}
+				}
+			$("#fieldBtn").text("Field : " + cur_field.name);
+			
+			$('#fieldsTable').find('tr').click(function(){
                 $(this).siblings().removeClass("highlighted");
                 $(this).toggleClass("highlighted");
-               var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
-                for(i =0; i< fields.length; i++)
-                    if (fields[i].name === cur_field_name){
-                        cur_field = fields[i];
-                        break;
-                    }
+				var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
+					for(i =0; i< fields.length; i++){
+						if (fields[i].name === cur_field_name){
+							cur_field = fields[i];
+							break;
+						}
+					}	
                     $("#fieldBtn").text("Field : " + cur_field.name);
                 });
             }else{
@@ -891,15 +896,6 @@ function numberLoadsOnField(){
         }
     }
 }
-
-// var count = 0;
-// for(var i = 0; i < array.length; ++i){
-//     if(array[i] == 2)
-//         count++;
-// }
-
-
-
 
 function createOpTable() {
     var cols = "4";
