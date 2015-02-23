@@ -532,13 +532,14 @@ function saveSource(){
 	
 	function calculateRate(){
 		console.log(cur_spreader);
-		if(length_in_ft > 0){
+		alert(cur_spreader.width);
+
 			loadArea = (cur_spreader.width * length_in_ft)/ 43560;
+			
 			alert(loadArea);
 			loadRate = cur_spreader.capacity/ loadArea;
 			alert(loadRate);
-		}else{
 			alert("No Spread Path")
-		}
+		
 	}
 
