@@ -18,7 +18,7 @@ var STOP = 0;
 var START = 1;
 var  status =  STOP;
 var polyLength;
-
+var spreadRate;
  // var samplePoly = new google.maps.Polygon({
      // paths: [
      	// new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
@@ -215,9 +215,9 @@ function createMap(){
 		alert(polyLength +"spreadlength");
 		spreadArea = spreadWidth*spreadLength;
 		spreadArAc = spreadArea/43560;
-		alert(spreadArAc + "Spread area in acres");
-		spreadRate = cur_spreader.capacity/spreadArea;
-		alert(spreadRate + "spreadrate" + cur_spreader.unit);
+		alert(spreadArAc + " Spread area in acres");
+		spreadRate = cur_spreader.capacity/spreadArAc;
+		console.log(spreadRate);
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
 		if(fields = null){
