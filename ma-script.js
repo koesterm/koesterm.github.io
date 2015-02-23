@@ -202,20 +202,20 @@ function createMap(){
 				strokeOpacity: 1.0,
 				strokeWeight: 10
 				});
-				google.maps.LatLng.prototype.kmTo = function(a){ 
-					var e = Math, ra = e.PI/180; 
-					var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
-					var g = this.lng() * ra - a.lng() * ra; 
-					var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
-					(c) * e.pow(e.sin(g/2), 2))); 
-					return f * 6378.137; 
-				}
-			}	
+			}
+			google.maps.LatLng.prototype.kmTo = function(a){ 
+				var e = Math, ra = e.PI/180; 
+				var b = this.lat() * ra, c = a.lat() * ra, d = b - c; 
+				var g = this.lng() * ra - a.lng() * ra; 
+				var f = 2 * e.asin(e.sqrt(e.pow(e.sin(d/2), 2) + e.cos(b) * e.cos 
+				(c) * e.pow(e.sin(g/2), 2))); 
+				return f * 6378.137; 
+			}
 			google.maps.Polyline.prototype.inKm = function(n){ 
 				var a = this.getPath(n), len = a.getLength(), dist = 0; 
 				for (var i=0; i < len-1; i++) { 
 				dist += a.getAt(i).kmTo(a.getAt(i+1)); 
-				}
+			}
 			return dist; 
 			}
 			length_in_km =  polyline.inKm();
@@ -531,14 +531,18 @@ function saveSource(){
 	}
 	
 	function calculateRate(){
-		console.log(cur_spreader);
-		alert(cur_spreader.width);
-
-			loadArea = (cur_spreader.width * length_in_ft)/ 43560;
-			
-			alert(loadArea);
-			loadRate = cur_spreader.capacity/ loadArea;
-			alert(loadRate);
+		if(length_in_ft == undefined){
+			length_in_ft = 0;
+			}
+			var spreadWidth = cur_spreader.width;
+			alert(spreadWidth + "spreadwidth");
+			var spreadLength = length_in_ft;
+			alert(length_in_ft +"spreadlength");
+			var spreadArea = spreadWidth*spreadLength;
+			alert(spreadArea + "spreadarea");
+			var spreadRate = cur_spreader.capacity/spreadArea;
+			alert(spreadRate + "spreadrate");
+		
 			alert("No Spread Path")
 		
 	}
