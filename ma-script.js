@@ -186,7 +186,6 @@ function createMap(){
 				strokeWeight: 10
 				});
 			}
-			
 		}else{
 			for(var i = 0; i < cur_path.length; i++) {
 				latLngBounds.extend(cur_path[i]);
@@ -198,26 +197,15 @@ function createMap(){
 				});
 				
 				 // Creates the polyline object
-          var polyline = new google.maps.Polyline({
-            map: map,
-            path: cur_path,
-            strokeColor: '#0000FF',
-            strokeOpacity: 0.7,
-            strokeWeight: 10
-			});
+				var polyline = new google.maps.Polyline({
+					map: map,
+					path: cur_path,
+					strokeColor: '#0000FF',
+					strokeOpacity: 0.7,
+					strokeWeight: 10
+				});
 			}
 		}
-		var polyLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
-		console.log(polyLength);
-		spreadWidth = cur_spreader.width;
-		console.log(cur_spreader.width);
-		spreadLength = polyLength;
-		alert(polyLength +"spreadlength");
-		spreadArea = spreadWidth*spreadLength;
-		spreadArAc = spreadArea/43560;
-		alert(spreadArAc + " Spread area in acres");
-		spreadRate = cur_spreader.capacity/spreadArAc;
-		console.log(spreadRate);
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
 		if(fields = null){
@@ -268,7 +256,17 @@ function createMap(){
 				});
 		    }
 		}
-	}			
+		var polyLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
+				console.log(polyLength);
+				spreadWidth = cur_spreader.width;
+				console.log(cur_spreader.width);
+				spreadLength = polyLength;
+				alert(polyLength +"spreadlength");
+				spreadArea = spreadWidth*spreadLength;
+				spreadArAc = spreadArea/43560;
+				alert(spreadArAc + " Spread area in acres");	
+	}
+		
 }
 
 	
