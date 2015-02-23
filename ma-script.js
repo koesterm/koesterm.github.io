@@ -36,11 +36,8 @@ var  status =  STOP;
 fields = [];
 
 function postPath(){
-	cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
-	getPolyLength = google.maps.geometry.encoding.decodePath(cur_path);
-	console.log(getPolyLength)
-	polylineLength = google.maps.geometry.spherical.computeLength(getPolyLength.getPath().getArray());
-	alert(polylineLength);
+cur_record.path = google.maps.geometry.encoding.encodePath(cur_path);
+console.log(google.maps.geometry.encoding.decodePath(cur_record.path));
 }
 
 
@@ -209,6 +206,8 @@ function createMap(){
 			});
 			}
 		}
+		polylineLength = google.maps.geometry.spherical.computeLength(newPolyline.getPath().getArray());
+			alert(polylineLength);
         map.fitBounds(latLngBounds);      
 		map.setTilt(0);
 		if(fields = null){
