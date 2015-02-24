@@ -8,6 +8,7 @@ var cur_source;
 var cur_spreader;
 var cur_record;
 var tableRecord = [];
+var newSpreaderArray = [];
 var spreaders = [       
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
@@ -194,7 +195,6 @@ function spreaderTableFunc (){
         Table.innerHTML = ""
         createSpreaderTable();
         appendTableRows();
-        clearSpText();
     }
 }    
 
@@ -240,9 +240,9 @@ if(retrievedSpreaders != null){
 appendTableRows();
 
 function saveSpreader(){
-	var a  = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val() };
+	var a = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val(), "ut": $("#unloadTime").val() };
 
-    // $( "#add-spreader" ).collapsible( "option", "collapsed", true );
+    $( "#add-spreader" ).collapsible("collapse");
 	if(retrievedSpreaders == null){
 		spreaders.push(a);
 		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(spreaders));
@@ -252,18 +252,23 @@ function saveSpreader(){
 		window.localStorage.setItem('retrievedSpreaders', JSON.stringify(retrievedSpreaders));
 		console.log('what it is.')
 	}	
-	 spreaderTableFunc();
+    spreaderTableFunc();
     spTableClickListener();
+    spreaderTableDblClick();
 	spreaderStored();
+    spCancel();
 }
 
-function clearSpText(){
+function spCancel(){
     $('#spName').val("");
     $('#spCapacity').val("");
     $('#spUnit').val("");
+    $('#spUnit').selectmenu('refresh');
     $('#spWidth').val("");
     $('#spType').val("");
+    $('#spType').selectmenu('refresh');
     $('#unloadTime').val("");
+    $("#add-spreader").collapsible("collapse");  
 }
 
 $(document).ready(function(){
@@ -277,11 +282,12 @@ function spTableClickListener(){
             return $(this).text() == last_element.cSpred.name;
         }).parent('spTable, tr').toggleClass('highlighted');
            var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
-            for(i =0; i< spreaders.length; i++)
+            for(i =0; i< spreaders.length; i++){
                 if (spreaders[i].name === cur_spreader_name){
                     cur_spreader = spreaders[i];
                     break;
                 }
+            }    
                 $("#spreaderBtn").text("Spreader : " + cur_spreader.name);
             console.log(cur_spreader);
 
@@ -315,6 +321,71 @@ function spTableClickListener(){
     }
     calculateSpeed();
 }    
+
+function spreaderTableDblClick(){
+    $('#spTable').find('tr').dblclick(function(){
+        $(this).siblings().removeClass("highlighted");
+        $(this).toggleClass("highlighted");
+        var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< spreaders.length; i++){
+            if (spreaders[i].name === cur_spreader_name){
+                edit_spreader = spreaders[i];
+                break;
+            }
+        }
+        document.getElementById("spreaderEdit").style.visibility = 'visible';
+        document.getElementById("spreaderEdit").style.display = 'block';
+        document.getElementById("spreaderInitial").style.display = 'none';
+        $('#spName').val(edit_spreader.name);
+        $('#spCapacity').val(edit_spreader.capacity);
+        $('#spUnit').val(edit_spreader.unit);
+        $('#spUnit').selectmenu('refresh');
+        $('#spWidth').val(edit_spreader.width);
+        $('#spType').val(edit_spreader.type);
+        $('#unloadTime').val(edit_spreader.ut);
+        $("#add-spreader").collapsible("expand");
+    });
+}
+spreaderTableDblClick();
+
+function deleteSpreader(){
+    for(i =0; i< spreaders.length; i++){
+        if (spreaders[i] === edit_spreader){
+            removedSpreader = sources[i];
+            break;
+        }
+    }
+    spreaders.splice(i, 1);
+    spCancel();
+    window.localStorage.setItem('retrievedSpreaders', JSON.stringify(spreaders));   
+    spreaderStored();
+    spreaderTableFunc();
+    spreaderTableDblClick();
+    spTableClickListener();
+    cancelSpEd();
+}
+
+function cancelSpEd(){
+    document.getElementById("spreaderEdit").style.visibility = 'hidden';
+    document.getElementById("spreaderEdit").style.display = 'none';
+    document.getElementById("spreaderInitial").style.display = 'block';
+    spCancel();
+}
+
+function saveSpEd(){
+    var editedSpreader = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val(), "ut": $("#unloadTime").val() };
+    for(i =0; i< spreaders.length; i++){
+        if (spreaders[i] === edit_spreader){
+            spreaders[i] = editedSpreader;
+        }
+    }
+    window.localStorage.setItem('retrievedSpreaders', JSON.stringify(spreaders));   
+    spreaderStored();
+    spreaderTableFunc();
+    spreaderTableDblClick();
+    cancelSpEd();
+}
+
 
 /*Creates Source Table*/
 function createSourceTable() {
@@ -470,7 +541,7 @@ function loadComplete(){
 	killPathTimer();
     postPath();
 	createMap();
-	cur_record.rate = rate;
+	cur_record.rate = rate.toFixed(2);
     records.push(cur_record);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
@@ -491,6 +562,51 @@ function loadComplete(){
     console.log(retrievedRecords);
 }
 
+// Saves and pushes source information to array
+function saveSource(){
+    if($("#sourceName").val() == ""){
+        alert("Add Spreader Name");
+    }else if($("#sourceUnit").val() == ""){
+        alert("Please Select Source Nutrient Unit")
+    }else{
+        cur_source = { name: $("#sourceName").val(), nutrientUnit: $("#sourceUnit").val(), N:$("#nUnits").val(), P: $("#pUnits").val(), K: $("#kUnits").val()};
+        if(retrievedSources == null){
+            sources.push(cur_source);
+            window.localStorage.setItem('retrievedSources', JSON.stringify(sources));
+            console.log(sources);
+
+        }else{  
+            retrievedSources.push(cur_source);
+            window.localStorage.setItem('retrievedSources', JSON.stringify(retrievedSources));
+            console.log('what it is.')
+        }
+    sourceTableFunc();
+    sourceTableClickListener();
+    cancelSource();
+
+    //Changes rate label to display selected unit of measure
+    $(document).ready(
+        function() {
+            $("select[id = rateUnit").change(
+            function(){
+            var newText = $('option:selected',this).text();
+            $("label[for = number]").text(newText);
+            newText.bold();
+            });
+        });
+    }
+    sourceTableDblClick()
+}
+ 
+ function cancelSource(){
+    $( "#add_source" ).collapsible("collapse");
+    $('#sourceName').val("");
+    $('#sourceUnit').val("");
+    $('#sourceUnit').selectmenu('refresh');
+    $('#nUnits').val("");
+    $('#kUnits').val("");
+    $('#pUnits').val("");
+ }
 
 function sourceTableClickListener(){
     if(retrievedRecords != undefined){
@@ -537,8 +653,59 @@ function sourceTableClickListener(){
 	
 }
 
-//counts the number of loads from source
+function sourceTableDblClick(){
+    console.log(sources);
+    $('#sourceTable').find('tr').dblclick(function(){
+        $(this).siblings().removeClass("highlighted");
+        $(this).toggleClass("highlighted");
+        var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< sources.length; i++){
+            if (sources[i].name === cur_source_name){
+                edit_source = sources[i];
+                break;
+            }
+        }
+        console.log(edit_source);
+        document.getElementById("sourceEdit").style.visibility = 'visible';
+        document.getElementById("sourceEdit").style.display = 'block';
+        document.getElementById("sourceInitial").style.display = 'none';
+        $("#add_source").collapsible("expand");
+        $('#sourceName').val(edit_source.name);
+        $('#sourceUnit').val(edit_source.nutrientUnit);
+        $('#sourceUnit').selectmenu('refresh');
+        $('#nUnits').val(edit_source.N);
+        $('#kUnits').val(edit_source.K);
+        $('#pUnits').val(edit_source.P);
+    });
+}
+sourceTableDblClick();
 
+function deleteSource(){
+    for(i =0; i< sources.length; i++){
+        if (sources[i] === edit_source){
+            removedSource = sources[i];
+            break;
+        }
+    }
+    sources.splice(i, 1);
+    cancelSource();
+    window.localStorage.setItem('retrievedSources', JSON.stringify(sources));   
+    sourceStored();
+    sourceTableFunc();
+    sourceTableDblClick();
+    sourceTableClickListener();
+    cancelSourceEd();
+}
+
+function cancelSourceEd(){
+    document.getElementById("sourceEdit").style.visibility = 'hidden';
+    document.getElementById("sourceEdit").style.display = 'none';
+    document.getElementById("sourceInitial").style.display = 'block';
+    cancelSource();
+}
+
+
+//counts the number of loads from source
 $(document).ready(function(){
    numberLoadsFromSource();
 });
@@ -547,11 +714,11 @@ function numberLoadsFromSource(){
     if(retrievedRecords != null){
         var count = 1;
         var currentSN = $("#sourceTable tr.highlighted td")[0].innerHTML;
-            for(i =0; i< retrievedRecords.length; i++){
-                if (retrievedRecords[i].cSource.name === currentSN){
-                numberOfLoadsS = count++;
-                document.getElementById('numberLFS').innerHTML ='<strong>'+numberOfLoadsS+'</strong>';
-                }
+        for(i =0; i< retrievedRecords.length; i++){
+            if (retrievedRecords[i].cSource.name === currentSN){
+            numberOfLoadsS = count++;
+            document.getElementById('numberLFS').innerHTML ='<strong>'+numberOfLoadsS+'</strong>';
+            }
         }
     }
 }
@@ -961,13 +1128,12 @@ function saveOperator(){
 		window.localStorage.setItem('retrievedOp', JSON.stringify(retrievedOp));
 		console.log("it exists");
     }
-	
-	console.log(operators);
 	operatorsTableFunc();
 	$("#opName").val('');
-	// $("#add_operator").trigger( "collapse");
+	$("#add_operator").collapsible('collapse');
 	opTableClickListener(); 
-	opStored(); 
+	opStored();
+    operatorListDblClick(); 
 	}
 }
 
@@ -975,6 +1141,7 @@ function saveOperator(){
 function cancelOperator(){
     $("#opName").val("");
     $("#add_operator").collapsible("collapse");
+    operatorListDblClick();
 }
 
 
@@ -1046,8 +1213,12 @@ function opTableClickListener(){
 			$("#operatorBtn").text("Operator : " +cur_operator);
         });
     }
+    document.getElementById("opEdit").style.visibility = 'hidden';
+    document.getElementById("opEdit").style.display = 'none';
+    document.getElementById("opInitial").style.display = 'block';
 	
-}    
+}   
+console.log(retrievedRecords); 
 
 
 function operatorsTableFunc() {
@@ -1061,9 +1232,71 @@ function operatorsTableFunc() {
     }
 }    
 
-    // var coordinates = []; Saving this for later
+//Double click to edit or delete operator
+function operatorListDblClick(){
+    $('#operator_table').find('tr').dblclick(function(){
+        $(this).siblings().removeClass("highlighted");
+        $(this).toggleClass("highlighted");
+        var cur_op_name = $("#operator_table tr.highlighted td")[0].innerHTML;
+        for(i =0; i< operators.length; i++){
+            if (operators[i] === cur_op_name){
+                edit_operator = operators[i];
+                break;
+            }
+        }
+        document.getElementById("opEdit").style.visibility = 'visible';
+        document.getElementById("opEdit").style.display = 'block';
+        document.getElementById("opInitial").style.display = 'none';
+        $("#add_operator").collapsible("expand");
+        $("#opName").val(edit_operator);
+    });
+}
+operatorListDblClick();
 
-// for(var i = 0 ; i < polygonBounds.length ; i++)
-// {
-//     coordinates.push(polygonBounds.getAt(i).lat(), polygonBounds.getAt(i).lng());
-// } 
+function cancelOpEd(){
+    cancelOperator()
+    document.getElementById("opEdit").style.visibility = 'hidden';
+    document.getElementById("opEdit").style.display = 'none';
+    document.getElementById("opInitial").style.display = 'block';
+}
+
+function deleteOp(){
+    console.log(operators);
+    for(i =0; i< operators.length; i++){
+        if (operators[i] === edit_operator){
+            removedOp = operator[i];
+            break;
+        }
+    }
+    operators.splice(i, 1);
+    window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
+    console.log(operators);    
+    opStored();
+    operatorsTableFunc();
+    console.log("hello")
+    $("#opName").val('');
+    operatorListDblClick();
+    opTableClickListener();
+}
+
+function saveOpEd(){
+    if( $("#opName").val() == ""){
+    }else{
+        for(i =0; i< operators.length; i++){
+            if (operators[i] === edit_operator){
+                operators[i] = $("#opName").val();
+            }
+        }
+    window.localStorage.setItem('retrievedOp', JSON.stringify(operators));
+    console.log(operators);    
+    opStored();
+    operatorsTableFunc();
+    $("#opName").val('');
+    }
+    document.getElementById("opEdit").style.visibility = 'hidden';
+    document.getElementById("opEdit").style.display = 'none';
+    document.getElementById("opInitial").style.display = 'block';
+    $("#add_operator").collapsible("collapse");
+    operatorListDblClick();
+}
+
