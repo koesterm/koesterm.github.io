@@ -132,12 +132,20 @@ function recordPath() {
         }
 
 	);
-	
+
 };
 
+
 function killPathTimer(){
-navigator.geolocation.clearWatch(geoP);
-	// clearInterval(pathTimer);
+	navigator.geolocation.clearWatch(geoP);
+	polyLength = google.maps.geometry.spherical.computeLength(cur_path);
+	console.log(polyLength)
+	var spreadWidth = cur_spreader.width;
+	console.log(cur_spreader.width);
+	alert(polyLength +"spreadlength");
+	var spreadArea = spreadWidth*polyLength;
+	spreadArAc = spreadArea/43560;
+	rate = spreadArAc / spreadWidth;
 }
 	
 	//Map
@@ -255,18 +263,8 @@ function createMap(){
    					currentMark.setMap(null); //removes the marker
 				});
 		    }
-		}
-		var polyLength = google.maps.geometry.spherical.computeLength(polyline.getPath().getArray());
-				console.log(polyLength);
-				spreadWidth = cur_spreader.width;
-				console.log(cur_spreader.width);
-				spreadLength = polyLength;
-				alert(polyLength +"spreadlength");
-				spreadArea = spreadWidth*spreadLength;
-				spreadArAc = spreadArea/43560;
-				alert(spreadArAc + " Spread area in acres");	
-	}
-		
+		}	
+	}		
 }
 
 	
@@ -380,25 +378,7 @@ function addFieldMap(){
 				infoWindow = new google.maps.InfoWindow();
 				samsPolygon.set("name", polyPath.name);
 				samsPolygon.set("area", polyPath.area);
-				samsPolygon.setMap(map);
-				// google.maps.event.addListener(samsPolygon,'click', function(event) {
-						// infoWindow.setContent("<b> Field information </b><br>" + "Name : " + this.get("name") + "<br>"
-						// + "Area : " + this.get("area") + "<br>");
-	   					// infoWindow.setPosition(event.latLng);
-	   					// infoWindow.open(map);
-	   					// currentMark = infoWindow;
-				// });
-					// google.maps.event.addListener(samsPolygon.getPath(), 'set_at', function(event) {
-						// var newPolyPath = google.maps.geometry.encoding.encodePath(samsPolygon.getPath());
-						// var getInfo = this.get("name");
-						// console.log(getInfo);
-
-					// });
-				
-					// google.maps.event.addListener(samsPolygon, 'insert_at', function() {
-						// console.log("test");
-					// });
-				
+				samsPolygon.setMap(map);			
 				}	
 			}
 		}
