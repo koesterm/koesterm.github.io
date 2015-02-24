@@ -8,8 +8,6 @@ var cur_source;
 var cur_spreader;
 var cur_record;
 var tableRecord = [];
-var polyLength;
-var spreadRate;
 var spreaders = [       
         {"name":"Kuhn1" , capacity: 12, unit: "Tons" , width: 40, type : "Right Discharge"},
         {"name":"Balzer" , capacity: 4800, unit: "Gallons", width: 50, type : "Right Discharge"}
@@ -449,20 +447,21 @@ console.log(cur_spreader);
 	}else if(cur_operator == undefined){
 		alert('Please select an operator');
 	}else{	
-		recordPath();
-		unloadingDiv()
-		getDateTime();
-		cur_record.cSpred = cur_spreader;
-		cur_record.cSource = cur_source;
-		cur_record.date = spreadDate;
-		cur_record.Time = spreadTime;
-		cur_record.field = cur_field;
-		cur_record.operator = cur_operator; 
-		cur_record.fillLevel = $("#spFill").val();
-	
+	   recordPath();
+	   unloadingDiv()
+	   getDateTime();
+	   cur_record.cSpred = cur_spreader;
+	   cur_record.cSource = cur_source;
+	   cur_record.date = spreadDate;
+	   cur_record.Time = spreadTime;
+	   cur_record.field = cur_field;
+	   cur_record.operator = cur_operator; 
+	   cur_record.fillLevel = $("#spFill").val();
+
 		// timerFunc();
-		overlay();
-	}
+	   overlay();
+	   console.log(cur_record);
+    }
 }
     
 
@@ -471,7 +470,7 @@ function loadComplete(){
 	killPathTimer();
     postPath();
 	createMap();
-	cur_record.rate = spreadRate;
+	cur_record.rate = rate;
     records.push(cur_record);
     if(retrievedRecords == null){
     window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
@@ -489,6 +488,7 @@ function loadComplete(){
     // appendSpreadsheet();
 	overlay();
 	cur_path = [];
+    console.log(retrievedRecords);
 }
 
 
