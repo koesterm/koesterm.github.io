@@ -141,11 +141,10 @@ function killPathTimer(){
 	polyLength = google.maps.geometry.spherical.computeLength(cur_path);
 	console.log(polyLength)
 	var spreadWidth = cur_spreader.width;
-	console.log(cur_spreader.width);
-	alert(polyLength +"spreadlength");
+	var spreadAmount = cur_spreader.capacity
 	var spreadArea = spreadWidth*polyLength;
 	spreadArAc = spreadArea/43560;
-	rate = spreadArAc / spreadWidth;
+	rate =  spreadAmount /spreadArAc;
 }
 	
 	//Map
