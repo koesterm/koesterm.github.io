@@ -409,53 +409,14 @@ $('#saveField').click(function () {
 function addFieldRerun(){
 	addFieldMap();
 }
-
-// Saves and pushes source information to array
-function saveSource(){
-	cur_source = { name: $("#sourceName").val(), nutrientUnit: $("#sourceUnit").val(), N:$("#nUnits").val(), P: $("#pUnits").val(), K: $("#kUnits").val()};
-	console.log(sources);
-	sources.push(cur_source);
-	console.log(retrievedSources);
-	sourceTableFunc();
-	sourceTableClickListener();
-	$('#sourceName').val("");
-	$('#sourceUnit').val("");
-	$('#nUnits').val("");
-	$('#kUnits').val("");
-	$('#pUnits').val("");
-	// $( "#add_source" ).collapsible( "option", "collapsed", true );
-	
-	
-	if(retrievedSources == null){
-			window.localStorage.setItem('retrievedSources', JSON.stringify(sources));
-			console.log(sources);
-	}else{  
-			retrievedSources.push(cur_source);
-			window.localStorage.setItem('retrievedSources', JSON.stringify(retrievedSources));
-			console.log('what it is.')
-	}
-
-	
-	
-	//Changes rate label to display selected unit of measure
-		$(document).ready(
-			function() {
-				$("select[id = rateUnit").change(
-				function(){
-				var newText = $('option:selected',this).text();
-				$("label[for = number]").text(newText);
-				newText.bold();
-				});
-			});
-  }
-  
-  function calculateSpeed(){
+ 
+ function calculateSpeed(){
 			var  rtSelect = cur_field.unit;
 				if(rtSelect =='gal/ac'){
 				var rate =  cur_field.rate;
 				var width = cur_spreader.width;
 				d = 43560/ width;
-				outPut = 4800/7;
+				outPut = cur_spreader.capacity/cur_spreader.ut;
 				x = 0.0113636364;	// 1 ft/min MPH
 				s = (d/(rate/outPut))*x;	
 				document.getElementById('speedReturn').innerHTML = '<strong>'+s.toFixed(1) +' (MPH)</strong>';
