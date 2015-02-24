@@ -2,22 +2,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
- <meta name="mobile-web-app-capable" content="yes">
- <title>Manure App</title>
- <link rel="stylesheet" type="text/css" href="ma-style.css" />
- <link rel="stylesheet" type="text/css" href="jqm-icon-pack-fa.css" />
+<meta name="viewport" content="width=device-width, height=device-height, minimum-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Manure App</title>
+<link rel="stylesheet" type="text/css" href="ma-style.css" />
+<link rel="stylesheet" type="text/css" href="jqm-icon-pack-fa.css" />
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.0/jquery.mobile-1.4.0.min.css" />
 <link rel="stylesheet" href="http://demos.jquerymobile.com/1.4.0/theme-classic/theme-classic.css" />
 <link rel="stylesheet" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css" />
-
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-<!--<script src="drive.js"></script>-->
-<script>
-$(document).bind('mobileinit',function(){
-		$.mobile.selectmenu.prototype.options.nativeMenu = false;
-	});
-</script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+// <script>
+// $( document ).on( "pagecreate", "#home", function( event ) {
+//   alert( "This page was just enhanced by jQuery Mobile!" );
+// });
+
+// $(document).bind('mobileinit',function(){
+// 		$.mobile.selectmenu.prototype.options.nativeMenu = false;
+// 	});
+// </script>
 </head>
 	
  <body>
@@ -40,7 +44,7 @@ $(document).bind('mobileinit',function(){
 				<a href="#spreader-list" id="spreaderBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Manure Spreaders</a>
 				<a href="#field-list" id="fieldBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;" >Field Lists </a>
 				<a href="#sourceList" id="sourceBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Source</a>
-				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;">Operator List</a>
+				<a href="#operator_page" id="operatorBtn" data-role="button" data-transition="slide" class="custom-btn" style ="line-height: 2.5em;" rel="external">Operator List</a>
 			</div>
 			<div id="overlay">
 				<div id="spAnimation">
@@ -207,18 +211,23 @@ $(document).bind('mobileinit',function(){
 			<div>
 				<label for="spType">Spreader Type:</label><select id="spType">
 				<option value="">Select Spreader Type</option>
-				<option value="Right Side Discharge">Right Side Discharge</option>
-				<option value="Left Side Discharge">Left Side Discharge</option>
+				<option value="Right Discharge">Right Side Discharge</option>
+				<option value="Left Discharge">Left Side Discharge</option>
 				<option value="Rear Discharge">Rear Discharge</option>
 				<option value="Injection">Injection</option>
 				</select>
 				<div>
-				<label for="unloadTime">Unload Time (minutes)<input id="unloadTime" type="number" min="0" max="10" step="0.1" value="7.5"/>
+				<label for="unloadTime">Unload Time (minutes)<input id="unloadTime" type="number" min="0" max="10" step="0.1"/>
 			</div>
 		</div>
-			<div align="center" class="ui-grid-a">
-				<div class= "ui-block-a" ><button type="submit" id="slCancel">Cancel</button></div>
-				<div class= "ui-block-b"><button type="submit" id="slSave" onclick="saveSpreader()" data-theme="b">Save</button></div>
+			<div align="center" class="ui-grid-a" id="spreaderInitial">
+				<div class= "ui-block-a" ><button type="submit" id="slCancel" onclick ="spCancel();">Cancel</button></div>
+				<div class= "ui-block-b"><button type="submit" id="slSave" onclick="saveSpreader()">Save</button></div>
+			</div>
+			<div align="center" class="ui-grid-b" id="spreaderEdit" style="visibility: hidden;">
+				<div class= "ui-block-a" ><button type="submit" id="cancelSpreaderEd" onclick ="cancelSpEd();">Cancel</button></div>
+				<div class= "ui-block-b"><button type="submit" id="deleteSpreader" onclick="deleteSpreader()">Delete</button></div>
+				<div class= "ui-block-c"><button type="submit" id="deleteSpreader" onclick="saveSpEd()">Save</button></div>
 			</div>
 		</div>
 		</div>
@@ -239,8 +248,7 @@ $(document).bind('mobileinit',function(){
 			</div>
 		</div>
 		<div id="sourcelist">
-			<table id="sourceTable"></table>
-				
+			<table id="sourceTable"></table>	
 		</div>
 		<div data-role="collapsible" id="add_source">
 			<h3>Add Source</h3>
@@ -264,9 +272,14 @@ $(document).bind('mobileinit',function(){
 				<label for="pUnits">Units of Phosphorus:</label><input type="number" id="pUnits" value=""/>
 				</div>
 		</div>
-			<div align="center" class="ui-grid-a">
-				<div class="ui-block-a"><button type="submit" id="sourceCancel">Cancel</button></div>
-				<div  class="ui-block-b"><button type="submit" id="sourceSave" onclick="saveSource()">Save</button></div>
+			<div align="center" class="ui-grid-a" id = "sourceInitial">
+				<div class="ui-block-a"><button type="submit" id="sourceCancel" onclick="cancelSource();">Cancel</button></div>
+				<div  class="ui-block-b"><button type="submit" id="sourceSave" onclick="saveSource();">Save</button></div>
+			</div>
+			<div align="center" class="ui-grid-b" id = "sourceEdit" style ="visibility : hidden;">
+				<div class="ui-block-a"><button type="submit" id="sourceEdCancel" onclick="cancelSourceEd();">Cancel</button></div>
+				<div  class="ui-block-b"><button type="submit" id="sourceDelete" onclick="deleteSource();">Delete</button></div>
+				<div  class="ui-block-c"><button type="submit" id="sourceSave" onclick="saveSource();">Save</button></div>
 			</div>
 		</div>
 	</div>
@@ -354,14 +367,19 @@ $(document).bind('mobileinit',function(){
 		<div id="operatorList">
 			<table id="operator_table"></table>
 		</div>
-		<div id="add_operator" data-role="collapsible">
+		<div id="add_operator" <div data-role="collapsible" data-content-theme="false">
 			<h3>Add Operator</h3>
 			<div data-role="fieldcontain" id="">
 				<input type="text" id="opName" value="" placeholder="Operator's Name" />
 			</div>
-			<div class="ui-grid-a">
+			<div id = "opInitial" class="ui-grid-a">
 				<div class="ui-block-a"><button id="cancelOp" type="submit" onclick="cancelOperator()">Cancel</button></div>
 				<div class="ui-block-b"><button id="saveOp" type="submit" onclick="saveOperator()">Save</button></div>
+			</div>
+			<div id = "opEdit" class = "ui-grid-b" style="visibility: hidden;">
+				<div class="ui-block-a"><button id="cancelOpEd" type="submit" onclick="cancelOpEd()">Cancel</button></div>
+				<div class="ui-block-b"><button id="deleteOp" type="submit" onclick="deleteOp()">Delete</button></div>
+				<div class="ui-block-c"><button id="saveOpEd" type="submit" onclick="saveOpEd()">Save</button></div>
 			</div>
 		</div>
 		<div data-role="footer" class="ui-footer" data-position="fixed">
@@ -390,15 +408,18 @@ $(document).bind('mobileinit',function(){
 
 </div>
 </body>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
 <script src="https://apis.google.com/js/client.js?onload=onApiLoad"></script>
 <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=drawing,geometry"></script>
 <script src="ma-script.js"></script>
 <script src="data_store.js"></script>
 <script src="local_store.js"></script>
 <script src="CSVcalc.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
 <script src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<!--<script src="drive.js"></script>-->
+
 </html>
 
 
