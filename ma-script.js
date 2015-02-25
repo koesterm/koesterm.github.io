@@ -19,6 +19,10 @@ var START = 1;
 var  status =  STOP;
 var polyLength;
 var spreadRate;
+
+
+
+
  // var samplePoly = new google.maps.Polygon({
      // paths: [
      	// new google.maps.LatLng(41.09885910447265 , -86.64110183715822),
