@@ -1356,6 +1356,7 @@ function deleteOp(){
     $("#opName").val('');
     operatorListDblClick();
     opTableClickListener();
+    $("#add_operator").collapsible("collapse");
 }
 
 function saveOpEd(){
