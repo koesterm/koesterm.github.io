@@ -353,7 +353,7 @@ function spTableClickListener(){
 }    
 
 function spreaderTableDblClick(){
-    $('#spTable').find('tr').deligat("dblclick doubletap", function(event)){
+    $('#spTable').find('tr').deligat("dblclick doubletap", function(event){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
         var cur_spreader_name = $("#spTable tr.highlighted td")[0].innerHTML;
