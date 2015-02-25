@@ -656,7 +656,7 @@ function sourceTableClickListener(){
 
 function sourceTableDblClick(){
     console.log(sources);
-    $('#sourceTable').find('tr').dblclick(function(){
+    $('#sourceTable').find('tr').doubleTap(function(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
         var cur_source_name = $("#sourceTable tr.highlighted td")[0].innerHTML;
@@ -1081,7 +1081,7 @@ function cancelDraw(){
 }
 
 function fieldTableDblClick(){
-    $('#fieldsTable').find('tr').dblclick(function(){
+    $('#fieldsTable').find('tr').doubleTap(function(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
         var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
@@ -1313,7 +1313,7 @@ function operatorsTableFunc() {
 
 //Double click to edit or delete operator
 function operatorListDblClick(){
-    $('#operator_table').find('tr').dblclick(function(){
+    $('#operator_table').find('tr').doubleTap(function(){
         $(this).siblings().removeClass("highlighted");
         $(this).toggleClass("highlighted");
         var cur_op_name = $("#operator_table tr.highlighted td")[0].innerHTML;
