@@ -13,15 +13,14 @@
 <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-// <script>
-// $( document ).on( "pagecreate", "#home", function( event ) {
-//   alert( "This page was just enhanced by jQuery Mobile!" );
-// });
+<script>
+$( document ).on( "pagecreate", "#home", function( event ) {
+});
 
-// $(document).bind('mobileinit',function(){
-// 		$.mobile.selectmenu.prototype.options.nativeMenu = false;
-// 	});
-// </script>
+ $(document).on('pagecreate',function(){
+ 		$.mobile.selectmenu.prototype.options.nativeMenu = false;
+	});
+ </script>
 </head>
 	
  <body>
@@ -35,7 +34,7 @@
 				<ul>
 					<li><a href="#home" data-role="button">Dashboard</a></li>
 					<li><a href="#map-page" data-role="button" data-transition="slide" onclick="return createMap();">Map</a></li>
-					<li><a href="#recordPage" data-role="button">Records</a></li>
+					<li><a href="#recordPage" data-role="button" rel="external">Records</a></li>
 				</ul>
 			</div>
 		</div>
@@ -119,22 +118,46 @@
 			<div id="fieldList">
 			<table id="fieldsTable"></table>
 			</div>
-			<div data-role="content" class="ui-content">
-				<a href="#add_field" data-role="button" id="addNewField" data-transition="pop"> + Add a Field </a>
-				<div data-role="content" id="fieldList" ></div>
+			<div data-role="collapsible" id="add_field">
+			<h3>New Field</h3>
+			<div data-role="fieldcontain" id="addField">
+				<div>
+				<label for="sourceName">Field Name:</label><input type="text" id="fieldName" value="" />
+				</div>
+					<h3 Style="text-align: center" data-role = "header">Desired Rate</h3>
+				<div style="text-align: center;">
+					<select id="rateUnit">
+						<option value="">Select Unit</option>
+						<option value="gal/ac">Gallons/Acre</option>
+						<option value="1000gal/ac"> 1000 Gallons/Acre</option>
+						<option value="tons/ac">Tons/Acre</option>
+					</select>
+				</div>
+				<div >
+					<div style="text-align:center;"><label for="rateValue" id="rateLabel">Desired Rate:</label></div>
+					<input type="number" id="rateValue" value="" min="0.1" max="10000" step="0.1" />
+				</div>
+				<div>
+				<a href="#add_field" data-role="button" id="addNewField" data-transition="slide"> + Add Field Boundary</a>
+				</div>
+				<div align="center" class="ui-grid-a" id = "fieldInitial">
+					<div class="ui-block-a"><button type="submit" id="fieldCancel" onclick="cancelField();">Cancel</button></div>
+					<div  class="ui-block-b"><button type="submit" id="fieldSave" onclick="saveField();">Save</button></div>
+				</div>
+				<div align="center" class="ui-grid-b" id = "fieldEdit" style ="visibility : hidden; display: none;">
+					<div class="ui-block-a"><button type="submit" id="fieldEdCancel" onclick="cancelFieldEd();">Cancel</button></div>
+					<div  class="ui-block-b"><button type="submit" id="fieldDelete" onclick="deleteField();">Delete</button></div>
+					<div  class="ui-block-c"><button type="submit" id="fieldSave" onclick="saveFieldEd();">Save</button></div>
+				</div>
 			</div>
 		</div>
-		<div data-role="footer" class="ui-footer" data-position="fixed">
-			<h4>Open Ag Toolkit 2014</h4>
-		</div>
 	</div>
-
-	
+</div>	
 	<!--Add Field page
 	====================================================================-->
 	<div data-role="page" id="add_field" data-theme="d">
 		<div data-role="header" data-add-back-btn="true" class="ui-header">
-			<h1>Add a field</h1>
+			<h1>Draw a Field</h1>
 			<div data-role="navbar" class="navbar">
 				<ul>
 					<li><a href="#home" data-role="button">Dashboard</a></li>
@@ -144,35 +167,17 @@
 					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
 				</ul>
 			</div>
-		</div>
-		<div data-role="content" id="fieldContainer" data-role="ui-content">
-			<div id="addFieldName">
-					<input type="text" id="fieldName" value="" placeholder="Field Name"/>
-			</div>		
-			<div id= "fieldInputDiv">
-				<div id="rateLeft">
-					<select id="rateUnit">
-						<option value="">Select Unit</option>
-						<option value="gal/ac">Gallons/Acre</option>
-						<option value="1000gal/ac"> 1000 Gallons/Acre</option>
-						<option value="tons/ac">Tons/Acre</option>
-					</select>
-				</div>
-				<div id="rateRight">
-					<div style="text-align:center;"><label for="rateValue" id="rateLabel">Desired Rate:</label></div>
-					<input type="number" id="rateValue" value="" min="0.1" max="10000" step="0.1" />
-				</div>
-			</div>
-		</div>		
+		</div>	
 		<div id="addFieldMap">
 		</div>
 
 		<div data-role="footer" class="ui-footer" data-position="fixed" data-tap-toggle="false">
 			<div data-role="navbar">
 				<ul>
-					<li><input type="submit" class="flButton" id="cancelField" value="Cancel" /></li>
+					<li><input type="submit" class="flButton" id="cancelField" value="Cancel" onclick="cancelDraw();" /></li>
 					<li><input type="submit" class="flButton" id="deleteField" value="Delete" /></li>
-					<li><input type="submit" class="flButton" id="saveField" value="Save" /></li>
+					<li><a href="#field-list" data-role="button" id="doneDraw" onclick="return doneDraw();" data-transition="slide">Done</a></li>
+					
 				</ul>
 			</div>
 		</div>
@@ -194,7 +199,7 @@
 		</div>
 		<div data-role="content">
 		<div id="spreaders" data-scroll="true">
-		<table id="spTable"></table>
+		<table id="spTable" style="border-collapse: collapse;"></table>
 		</div>
 		<div data-role="collapsible" id="add-spreader">
 			<h3>Add Spreader</h3>
@@ -224,7 +229,7 @@
 				<div class= "ui-block-a" ><button type="submit" id="slCancel" onclick ="spCancel();">Cancel</button></div>
 				<div class= "ui-block-b"><button type="submit" id="slSave" onclick="saveSpreader()">Save</button></div>
 			</div>
-			<div align="center" class="ui-grid-b" id="spreaderEdit" style="visibility: hidden;">
+			<div align="center" class="ui-grid-b" id="spreaderEdit" style="visibility: hidden; display: none;">
 				<div class= "ui-block-a" ><button type="submit" id="cancelSpreaderEd" onclick ="cancelSpEd();">Cancel</button></div>
 				<div class= "ui-block-b"><button type="submit" id="deleteSpreader" onclick="deleteSpreader()">Delete</button></div>
 				<div class= "ui-block-c"><button type="submit" id="deleteSpreader" onclick="saveSpEd()">Save</button></div>
@@ -256,7 +261,9 @@
 				<div>
 				<label for="sourceName">Source Name:</label><input type="text" id="sourceName" value="" />
 				</div>
-					<h4 Style="text-align: center">Nutrient Content</h4>
+				<div style="margin: 5px;">
+					<h2 Style="text-align: center" data-role = "header">Nutrient Content</h2>
+				</div>	
 				<div style="text-align: center;">
 				<select id="sourceUnit" style="text-align: center;">
 				<option value="">Select Unit Measure of Nutrient</option>
@@ -276,7 +283,7 @@
 				<div class="ui-block-a"><button type="submit" id="sourceCancel" onclick="cancelSource();">Cancel</button></div>
 				<div  class="ui-block-b"><button type="submit" id="sourceSave" onclick="saveSource();">Save</button></div>
 			</div>
-			<div align="center" class="ui-grid-b" id = "sourceEdit" style ="visibility : hidden;">
+			<div align="center" class="ui-grid-b" id = "sourceEdit" style ="visibility : hidden; display: none;">
 				<div class="ui-block-a"><button type="submit" id="sourceEdCancel" onclick="cancelSourceEd();">Cancel</button></div>
 				<div  class="ui-block-b"><button type="submit" id="sourceDelete" onclick="deleteSource();">Delete</button></div>
 				<div  class="ui-block-c"><button type="submit" id="sourceSave" onclick="saveSource();">Save</button></div>
@@ -397,7 +404,7 @@
 				<ul>
 					<li><a href="#home" data-role="button">Dashboard</a></li>
 					<li><a href="#map-page" data-role="button" data-transition="slide">Map</a></li>
-					<li><a id="csvDownLoad" class = "ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-action" data-role="button" onclick ="return parseCSV()">Download CSV</a></li>
+					<li><a id="csvDownLoad" class = "ui-btn ui-shadow ui-corner-all ui-btn-icon-left ui-icon-action" data-role="button" onclick ="return parseCSV()">Export CSV</a></li>
 					<!-- <li><a href="#plan_page" data-role="button">Plan</a></li> -->
 				</ul>
 			</div>
