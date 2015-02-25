@@ -361,7 +361,7 @@ function spTableClickListener(){
                                 var now = (new Date()).valueOf();
 				var diff = (now - lastTap);
                                 lastTap = now ;
-                                if (diff < 350) {
+                                if (diff < 500) {
 		                    if($.isFunction( doubleTapCallback ))
 		                    {
 		                       doubleTapCallback.call(elm);
