@@ -26,7 +26,7 @@ var sources = [
 // var sources = [];
 
 var records = [];
-
+//==================================================Local Storage Functions==============================================
 function lStorage(){
     if(retrievedRecords = null) {
         window.localStorage.setItem('records', JSON.stringify(records));
@@ -106,44 +106,79 @@ function fieldsStored(){
 }
 fieldsStored();
 
-function saveField(){
-    console.log(fields);
-	var field = { name: $("#fieldName").val(), unit: $("#rateUnit").val(), rate: $("#rateValue").val(), area: areaAcres, polygon: encodePGon }; 
-	if(fields == null){
-		fields = [field];
-		console.log('fields = field');
-		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
-	}else{
-		fields.push(field);
-		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
-		field = {};
-	}
-	
-	console.log(fields);
-	console.log(retrievedFields);
-	fieldsTableFunc();
-	fieldTableClickListener();
-	addFieldMap();
-	fieldsStored(); 
-	field = {};
-	window.location.href = "#field-list";
+//===========================================Star/Stop functions for unloading==========================================
+cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "rate": "", "fillLevel": ""}
+
+
+function startUnload(){
+console.log(cur_field);
+console.log(cur_spreader);
+	if(cur_spreader == undefined){
+		alert('Please select a spreader');
+	}else if(JSON.stringify(cur_field).length == 2 ){
+		alert('Please select a field');
+	}else if(cur_source == undefined){
+		alert('Please select a source');
+	}else if(cur_operator == undefined){
+		alert('Please select an operator');
+	}else{	
+	   recordPath();
+	   unloadingDiv()
+	   getDateTime();
+	   cur_record.cSpred = cur_spreader;
+	   cur_record.cSource = cur_source;
+	   cur_record.date = spreadDate;
+	   cur_record.Time = spreadTime;
+	   cur_record.field = cur_field;
+	   cur_record.operator = cur_operator; 
+	   cur_record.fillLevel = $("#spFill").val();
+
+		// timerFunc();
+	   overlay();
+	   console.log(cur_record);
+    }
+}
+    
+
+
+function loadComplete(){
+	killPathTimer();
+    postPath();
+	createMap();
+	cur_record.rate = rate.toFixed(2);
+    records.push(cur_record);
+    if(retrievedRecords == null){
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
+    lStorage();
+    numberLoadsOnField();
+    numberLoadsFromSource();   
+    }else{  
+    retrievedRecords.push(cur_record);
+    window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
+    numberLoadsOnField();
+    numberLoadsFromSource();
+    }
+    recordTableFunc();
+    cur_record = {};
+    // appendSpreadsheet();
+	overlay();
+	cur_path = [];
+    console.log(retrievedRecords);
 }
 
-
+//========================================Save Spreader, Table, and Click Listeners===================================
 function createSpreaderTable() {
-    var cols = "4";
     var spBody = document.getElementById('spTable');
-    
     var bTbl = document.createElement('table');
-
     bTbl.style.width = '100%';
     bTbl.style.align = 'center';
-    bTbl.setAttribute('border','1');
-    bTbl.fontsize ='13px';
+    bTbl.style.borderCollapse = "collapse";
     var tbdy = document.createElement('tbody');
+	tbdy.setAttribute('border', 'none');
 
     var tr = document.createElement('tr');
     tr.style.textAlign = 'center'
+	
     
     th = document.createElement('th');
     th.innerHTML = "Name";
@@ -171,15 +206,7 @@ function createSpreaderTable() {
     tr.appendChild(th);
     tbdy.appendChild(tr);
     
-    /*th = document.createElement('th');
-    th.innerHTML = "Delete";
-    th.width = '16.6%';
-    tr.appendChild(th);
-    tbdy.appendChild(tr);
-    */
-
     gHeaderCreated = true;
-
     bTbl.appendChild(tbdy);
     spBody.appendChild(bTbl);
 
@@ -206,8 +233,9 @@ if(retrievedSpreaders != null){
     var tableB = document.getElementById('spTable');
     for (var i = 0; i < spreaders.length; i++) {
      var row = tableB.insertRow(-1);
+	 row.style.height = "50px";
      tableB.style.textAlign = 'center';
-     
+		
      var spName = row.insertCell(-1);
      spName.textAlign = 'center';
      spName.appendChild(document.createTextNode(spreaders[i].name));
@@ -238,6 +266,8 @@ if(retrievedSpreaders != null){
     }
 }
 appendTableRows();
+
+
 
 function saveSpreader(){
 	var a = {"name": $("#spName").val(), "capacity": $("#spCapacity").val(), "unit": $("#spUnit").val(), "width": $("#spWidth").val(), "type": $("#spType").val(), "ut": $("#unloadTime").val() };
@@ -342,6 +372,7 @@ function spreaderTableDblClick(){
         $('#spUnit').selectmenu('refresh');
         $('#spWidth').val(edit_spreader.width);
         $('#spType').val(edit_spreader.type);
+		$('#spType').selectmenu('refresh');
         $('#unloadTime').val(edit_spreader.ut);
         $("#add-spreader").collapsible("expand");
     });
@@ -383,22 +414,19 @@ function saveSpEd(){
     spreaderStored();
     spreaderTableFunc();
     spreaderTableDblClick();
+	spTableClickListener();
     cancelSpEd();
 }
 
-
+//====================================Save Source, Table, and Click Listeners===============================
 /*Creates Source Table*/
 function createSourceTable() {
     var cols = "4";
     var soBody = document.getElementById('sourceTable');
-    
     var bTbl = document.createElement('table');
-    
-
-    bTbl.style.width = '90%';
+    bTbl.style.width = '100%';
     bTbl.style.align = 'center';
-    bTbl.setAttribute('border','1');
-    bTbl.style.marginLeft = '5%';
+	bTbl.style.borderCollapse = "collapse";
     var tbdy = document.createElement('tbody');
     tbdy.texAlign="center";
     var tr = document.createElement('tr');
@@ -465,6 +493,7 @@ function appendSourceTableRows(){
     var tableB = document.getElementById('sourceTable');
     for (var i = 0; i < sources.length; i++) {
      var row = tableB.insertRow(-1);
+	 row.style.height = "50px";
      tableB.style.textAlign = 'center';
      
      var sourceName = row.insertCell(-1);
@@ -502,65 +531,6 @@ appendSourceTableRows();
 $(document).ready(function(){
    sourceTableClickListener();
 });
-
-cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", "cSource": "","path":{}, "rate": "", "fillLevel": ""}
-
-
-function startUnload(){
-console.log(cur_field);
-console.log(cur_spreader);
-	if(cur_spreader == undefined){
-		alert('Please select a spreader');
-	}else if(JSON.stringify(cur_field).length == 2 ){
-		alert('Please select a field');
-	}else if(cur_source == undefined){
-		alert('Please select a source');
-	}else if(cur_operator == undefined){
-		alert('Please select an operator');
-	}else{	
-	   recordPath();
-	   unloadingDiv()
-	   getDateTime();
-	   cur_record.cSpred = cur_spreader;
-	   cur_record.cSource = cur_source;
-	   cur_record.date = spreadDate;
-	   cur_record.Time = spreadTime;
-	   cur_record.field = cur_field;
-	   cur_record.operator = cur_operator; 
-	   cur_record.fillLevel = $("#spFill").val();
-
-		// timerFunc();
-	   overlay();
-	   console.log(cur_record);
-    }
-}
-    
-
-
-function loadComplete(){
-	killPathTimer();
-    postPath();
-	createMap();
-	cur_record.rate = rate.toFixed(2);
-    records.push(cur_record);
-    if(retrievedRecords == null){
-    window.localStorage.setItem('retrievedRecords', JSON.stringify(records));
-    lStorage();
-    numberLoadsOnField();
-    numberLoadsFromSource();   
-    }else{  
-    retrievedRecords.push(cur_record);
-    window.localStorage.setItem('retrievedRecords', JSON.stringify(retrievedRecords));
-    numberLoadsOnField();
-    numberLoadsFromSource();
-    }
-    recordTableFunc();
-    cur_record = {};
-    // appendSpreadsheet();
-	overlay();
-	cur_path = [];
-    console.log(retrievedRecords);
-}
 
 // Saves and pushes source information to array
 function saveSource(){
@@ -723,13 +693,6 @@ function numberLoadsFromSource(){
     }
 }
 
-// $(document).ready(function(){
-//     var myselect = $("#spFill");
-//     myselect[0].selectedIndex = 3;
-//     myselect.selectmenu("refresh");
-// });
-
-
 /*Function returning Date and Time*/
 function getDateTime() {
     var now     = new Date(); 
@@ -759,7 +722,7 @@ function getDateTime() {
 }
 getDateTime();
 
-
+//==========================================Creates Record Table When Load is Complete======================================
 function createRecordTable() {
     var cols = "4";
     var reBody = document.getElementById('recordTable');
@@ -897,12 +860,10 @@ function appendRecordTableRows(){
      SpreaderFillLevel.appendChild(document.createTextNode(aName[i].fillLevel));
      
      recordTab.children[0].appendChild(row);
-     
-     
     }
 }
 
-
+//=====================================Saves Field, Table, and Click Listeners==================================
 
 /*Creates Field Table*/
 function createFieldsTable() {
@@ -910,17 +871,15 @@ function createFieldsTable() {
     var fBody = document.getElementById('fieldsTable');
     
     var bTbl = document.createElement('table');
-    
+    bTbl.style.borderCollapse = "collapse";
 
-    bTbl.style.width = '90%';
+    bTbl.style.width = '100%';
     bTbl.style.align = 'center';
-    bTbl.setAttribute('border','1');
-    bTbl.style.marginLeft = '5%';
-    bTbl.fontsize ='13px';
     var tbdy = document.createElement('tbody');
     tbdy.texAlign="center";
     var tr = document.createElement('tr');
     tr.style.textAlign = 'center'
+	tr.style.height = "40px";
     
     th = document.createElement('th');
     th.innerHTML = "Name";
@@ -942,13 +901,6 @@ function createFieldsTable() {
     th.width = '16.6%';
     tr.appendChild(th);
     tbdy.appendChild(tr);
-    
-    /*th = document.createElement('th');
-    th.innerHTML = "Delete";
-    th.width = '16.6%';
-    tr.appendChild(th);
-    tbdy.appendChild(tr);
-    */
 
     bTbl.appendChild(tbdy);
     fBody.appendChild(bTbl);
@@ -977,6 +929,7 @@ function appendFieldsTableRows(){
     for (var i = 0; i < fields.length; i++) {
      var row = tableB.insertRow(-1);
      tableB.style.textAlign = 'center';
+	 row.style.height = "50px";
      console.log(fields.length);
 
      var fieldName = row.insertCell(-1);
@@ -1004,7 +957,6 @@ appendFieldsTableRows();
 $(document).ready(function(){
    fieldTableClickListener();
 });
-
 
 function fieldTableClickListener(){
 if(retrievedFields != null){
@@ -1055,31 +1007,134 @@ var fields = retrievedFields;
     calculateSpeed();  
 }
 
-// Counts number of loads spread on field
-$(document).ready(function(){
-    numberLoadsOnField();
-});
-
-function numberLoadsOnField(){
-    if(retrievedRecords != null){
-    var count = 1;
-    var currentFN= $("#fieldsTable tr.highlighted td")[0].innerHTML;
-        for(i =0; i< retrievedRecords.length; i++){
-            if (retrievedRecords[i].field.name === currentFN){
-                numberOfLoadsF = count++;
-                document.getElementById('numberLonF').innerHTML ='<strong>'+numberOfLoadsF+'</strong>';
-            }
-        }
-    }
+function saveField(){
+    console.log(fields);
+	var field = { name: $("#fieldName").val(), unit: $("#rateUnit").val(), rate: $("#rateValue").val(), area: areaAcres, polygon: encodePGon }; 
+	if(fields == null){
+		fields = [field];
+		console.log('fields = field');
+		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
+	}else{
+		fields.push(field);
+		window.localStorage.setItem('retrievedFields', JSON.stringify(fields));
+		field = {};
+	}
+	
+	console.log(fields);
+	console.log(retrievedFields);
+	fieldsTableFunc();
+	fieldTableClickListener();
+	fieldTableDblClick();
+	addFieldMap();
+	fieldsStored(); 
+	field = {};
+	cancelField();
 }
 
-function createOpTable() {
-    var cols = "4";
-    var fBody = document.getElementById('operator_table');
-    
-    var bTbl = document.createElement('table');
-    
+function cancelField(){
+	$("#fieldName").val("");
+	$("#rateUnit").val("")
+	$("#rateUnit").selectmenu("refresh");
+	$("#rateValue").val("")
+	$("#addNewField").text("+ Add Field Boundary");
+	$("#add_field").collapsible("collapse");
+}
 
+function doneDraw(){
+	$("#addNewField").text("Field Boundary Added");
+}
+
+function cancelDraw(){
+	window.location.href = "#field-list";
+	cancelField();
+}
+
+function fieldTableDblClick(){
+    $('#fieldsTable').find('tr').dblclick(function(){
+        $(this).siblings().removeClass("highlighted");
+        $(this).toggleClass("highlighted");
+        var cur_field_name = $("#fieldsTable tr.highlighted td")[0].innerHTML;
+        for(i =0; i< fields.length; i++){
+            if (fields[i].name === cur_field_name){
+                edit_field = fields[i];
+                break;
+            }
+        }
+        document.getElementById("fieldEdit").style.visibility = 'visible';
+        document.getElementById("fieldEdit").style.display = 'block';
+        document.getElementById("fieldInitial").style.display = 'none';
+		$("#fieldName").val(edit_field.name);
+		$("#rateUnit").val(edit_field.unit);
+		$("#rateUnit").selectmenu("refresh");
+		$("#rateValue").val(edit_field.rate);
+		$("#addNewField").text("+ Add Field Boundary");
+		$("#addNewField").text("Edit Field Boundary");
+		$("#add_field").collapsible("expand");
+    });
+}
+fieldTableDblClick();
+
+function cancelFieldEd(){
+	document.getElementById("fieldEdit").style.visibility = 'hidden';
+    document.getElementById("fieldEdit").style.display = 'none';
+    document.getElementById("fieldInitial").style.display = 'block';
+	cancelField();
+}
+
+function deleteField(){
+    for(i =0; i< fields.length; i++){
+        if (fields[i] === edit_field){
+            break;
+        }
+    }
+    fields.splice(i, 1);
+    window.localStorage.setItem('retrievedFields', JSON.stringify(fields));   
+    fieldsStored();
+    fieldsTableFunc();
+    fieldTableDblClick();
+    fieldTableClickListener();
+    cancelFieldEd();
+}
+
+function saveFieldEd(){
+    var editedField = { name: $("#fieldName").val(), unit: $("#rateUnit").val(), rate: $("#rateValue").val(), area: areaAcres, polygon: encodePGon }; 
+    for(i =0; i< fields.length; i++){
+        if (fields[i] === edit_spreader){
+            fields[i] = editedSpreader;
+        }
+    }
+    window.localStorage.setItem('retrievedFields', JSON.stringify(fields));   
+    fieldsStored();
+    fieldsTableFunc();
+    fieldsTableDblClick();
+	fieldTableClickListener();
+    cancelFieldEd();
+}
+
+// Counts number of loads spread on field
+$(document).ready(function(){
+	numberLoadsOnField()
+});
+	function numberLoadsOnField(){
+		if(retrievedRecords != null){
+		var count = 1;
+		var currentFN= $("#fieldsTable tr.highlighted td")[0].innerHTML;
+			for(i =0; i< retrievedRecords.length; i++){
+				if (retrievedRecords[i].field.name === currentFN){
+					numberOfLoadsF = count++;
+					document.getElementById('numberLonF').innerHTML ='<strong>'+numberOfLoadsF+'</strong>';
+				}
+			}
+		}
+	}
+
+
+//===============================Saves Operator, Tables, and Click Listener================================
+
+function createOpTable() {
+    var fBody = document.getElementById('operator_table');
+    var bTbl = document.createElement('table');
+    bTbl.style.borderCollapse = "collapse";
     bTbl.style.width = '40%';
     bTbl.style.align = 'center';
     bTbl.setAttribute('border','1');
@@ -1137,39 +1192,32 @@ function saveOperator(){
 	}
 }
 
-
 function cancelOperator(){
     $("#opName").val("");
     $("#add_operator").collapsible("collapse");
     operatorListDblClick();
 }
 
-
 function appendOpTableRows(){ 
-if(retrievedOp !== null){
-    operators= retrievedOp;
-        
-    } 
-    var tableB = document.getElementById('operator_table');
-    for (var i = 0; i < operators.length; i++) {
-     var row = tableB.insertRow(-1);
-     tableB.style.textAlign = 'center';
-
-     var operatorName = row.insertCell(-1);
-     operatorName.textAlign = 'center';
-     operatorName.appendChild(document.createTextNode(operators[i]));
-     
-    
-    tableB.children[0].appendChild(row);
-    }
+	if(retrievedOp !== null){
+		operators= retrievedOp;
+	} 
+	var tableB = document.getElementById('operator_table');
+	for (var i = 0; i < operators.length; i++) {
+	var row = tableB.insertRow(-1);
+	row.style.height = "50px"
+	tableB.style.textAlign = 'center';
+	var operatorName = row.insertCell(-1);
+	operatorName.textAlign = 'center';
+	operatorName.appendChild(document.createTextNode(operators[i]));
+	tableB.children[0].appendChild(row);
+	}
 }
 appendOpTableRows();
-
 
 $(document).ready(function(){
    opTableClickListener();
 });
-
 
 function opTableClickListener(){
     if(retrievedRecords != undefined){
