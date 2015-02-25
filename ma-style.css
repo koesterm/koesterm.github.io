@@ -18,7 +18,7 @@ border-width: 3px;
 
 #operator_table{
 	width:100%;
-	margin-left:30%;
+	margin-left: 20%;
 }
 
 #recordTable{
@@ -87,10 +87,18 @@ table.altrowstable td {
 #fieldList{
 	height: 100%;
 }
+
 #fieldsTable{
-	width: 95%;
-	margin-left: 2.5%;
+	width: 100%;
+	border-collapse: collapse;
 }
+
+#fieldsTable, th {
+	border-collapse: collapse;
+	border-bottom: 2px solid black;
+}
+
+
 
 .ui-footer{
 	padding:10px,10px,10px,10px;
@@ -134,13 +142,30 @@ margin-bottom: 0px;
 #unload {
 	padding:0px;
 }	
+
 #spTable{
-	width:100%;
+	width: 100%;
+	border-collapse: collapse;
 }
+
+#spTable, th {
+	border-collapse: collapse;
+	border-bottom: 2px solid black;
+}
+
 
 #sourceTable{
 	width:100%;
 }
+
+#sourcelist{
+	margin-top: 5px;
+}
+#sourceTable, th {
+	border-collapse: collapse;
+	border-bottom: 2px solid black;
+}
+
 #targetRate {
 	height: 110px;
 	padding-bottom: 0px;
