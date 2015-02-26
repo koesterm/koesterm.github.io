@@ -143,7 +143,7 @@ function recordPath() {
 function killPathTimer(){
 	navigator.geolocation.clearWatch(geoP);
 	polyLength = google.maps.geometry.spherical.computeLength(cur_path);
-	alert(polyLength);
+	console.log(polyLength)
 	var spreadWidth = cur_spreader.width;
 	var spreadAmount = cur_spreader.capacity
 	var spreadArea = spreadWidth*polyLength;
@@ -167,10 +167,10 @@ function createMap(){
     } else {
         drawMap(defaultLatLng);  // No geolocation support, show default map
     }
-    function drawMap() {
+    function drawMap(latlng) {
         var myOptions = {
             zoom: 16,
-            center: cur_path[i],
+            center: latlng,
             mapTypeId: google.maps.MapTypeId.HYBRID
 		};
         var map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
@@ -217,7 +217,11 @@ function createMap(){
 				});
 			}
 		}
-        map.fitBounds(latLngBounds);      
+		if(latLngBounds.va.k = -180){
+			latLngBounds = latlng;
+			}else{
+        map.fitBounds(latLngBounds);  
+		}		
 		map.setTilt(0);
 		if(fields = null){
 			return;
