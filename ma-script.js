@@ -143,7 +143,7 @@ function recordPath() {
 function killPathTimer(){
 	navigator.geolocation.clearWatch(geoP);
 	polyLength = google.maps.geometry.spherical.computeLength(cur_path);
-	console.log(polyLength)
+	alert(polyLength);
 	var spreadWidth = cur_spreader.width;
 	var spreadAmount = cur_spreader.capacity
 	var spreadArea = spreadWidth*polyLength;
