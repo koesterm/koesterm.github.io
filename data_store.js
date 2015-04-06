@@ -113,6 +113,7 @@ cur_record = {"date": "", "Time": "","field": "", "operator": "", "cSpred": "", 
 function startUnload(){
 console.log(cur_field);
 console.log(cur_spreader);
+var test = JSON.stringify(cur_spreader);
 	if(cur_spreader == undefined){
 		alert('Please select a spreader');
 	}else if(JSON.stringify(cur_field).length == 2 ){
@@ -132,7 +133,7 @@ console.log(cur_spreader);
 	   cur_record.field = cur_field;
 	   cur_record.operator = cur_operator; 
 	   cur_record.fillLevel = $("#spFill").val();
-
+		
 		// timerFunc();
 	   overlay();
 	   console.log(cur_record);
