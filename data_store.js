@@ -114,6 +114,7 @@ function startUnload(){
 console.log(cur_field);
 console.log(cur_spreader);
 var test = JSON.stringify(cur_spreader);
+console.log(test);
 	if(cur_spreader == undefined){
 		alert('Please select a spreader');
 	}else if(JSON.stringify(cur_field).length == 2 ){
